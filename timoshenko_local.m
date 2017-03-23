@@ -1,8 +1,8 @@
 clear all
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
-cfstr='ss';
-n=150;
+cfstr='cl';
+n=100;
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
 x_central=find(x_dados==0.5);
@@ -244,9 +244,11 @@ apesos_3_theta(i,:)=matriz_pesos\arhs_3_theta(:,i);
         arhs_3_w(:,i)=0;
         arhs_3_theta(:,i)=0;
         case {'cl'}
-        rhs_1_u(:,i)=B11*dgdx(c,x_dados(i),sub_dominio(:));  
+%         rhs_1_u(:,i)=B11*dgdx(c,x_dados(i),sub_dominio(:));  
+rhs_1_u(:,i)=g(c,x_dados(i),sub_dominio(:));
         rhs_1_w(:,i)=0;
-        rhs_1_theta(:,i)=C11*dgdx(c,x_dados(i),sub_dominio(:));
+%         rhs_1_theta(:,i)=C11*dgdx(c,x_dados(i),sub_dominio(:));
+rhs_1_theta(:,i)=0;
         
         rhs_2_u(:,i)=0;
         rhs_2_w(:,i)=B55*dgdx(c,x_dados(i),sub_dominio(:));

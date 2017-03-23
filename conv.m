@@ -89,7 +89,7 @@ arhs_3_u=zeros(3,numel(x_dados));              %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 arhs_3_w=zeros(3,numel(x_dados));                 %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 arhs_3_theta=zeros(3,numel(x_dados));            %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-c=0.1;  %2*dist/sqrt(sqrt(3))   
+c=0.5;
 for i=1:numel(x_dados)
 if i==1
         sub_dominio=[x_dados(i), x_dados(i+1), x_dados(i+2)];
@@ -242,9 +242,11 @@ apesos_3_theta(i,:)=matriz_pesos\arhs_3_theta(:,i);
         arhs_3_w(:,i)=0;
         arhs_3_theta(:,i)=0;
         case {'cl'}
-        rhs_1_u(:,i)=B11*dgdx(c,x_dados(i),sub_dominio(:));  
+%         rhs_1_u(:,i)=B11*dgdx(c,x_dados(i),sub_dominio(:));
+rhs_1_u(:,i)=g(c,x_dados(i),sub_dominio(:));
         rhs_1_w(:,i)=0;
-        rhs_1_theta(:,i)=C11*dgdx(c,x_dados(i),sub_dominio(:));
+%         rhs_1_theta(:,i)=C11*dgdx(c,x_dados(i),sub_dominio(:));
+rhs_1_theta(:,i)=0;
         
         rhs_2_u(:,i)=0;
         rhs_2_w(:,i)=B55*dgdx(c,x_dados(i),sub_dominio(:));
