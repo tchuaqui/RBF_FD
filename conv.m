@@ -1,12 +1,11 @@
-clear all
+function [ freq,freq_exacta ] = conv( n )
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
-n=201;
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
 x_central=find(x_dados==0.5);
-
+c=0.5;  %2*dist/sqrt(sqrt(3)) 
 %%
 k=5/6;
 propmec=[5e-3 6e10 2.3e10 7500]; %[esp E G rho]
@@ -83,7 +82,7 @@ arhs_1_theta=zeros(3,numel(x_dados));
 arhs_2_w=zeros(3,numel(x_dados));
 arhs_2_theta=zeros(3,numel(x_dados));
 
-c=2/sqrt(n);  %2*dist/sqrt(sqrt(3))   
+  
 for i=1:numel(x_dados)
 if i==1
         sub_dominio=[x_dados(i), x_dados(i+1), x_dados(i+2)];
@@ -307,9 +306,7 @@ lambda_mode_w(1:n,p)=lambda_vec(1:n,p);
 lambda_mode_phi_x(1:n,p)=lambda_vec(n+1:end,p);
 lambda_mode=[lambda_mode_w;lambda_mode_phi_x];
 
-figure(1)
-subplot(1,3,1);plot(x_dados, lambda_mode_w(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(sqrt(lambda(p))/(2*pi),'%6.4f')])
-subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(sqrt(lambda(p))/(2*pi),'%6.4f')])
-
-%%
+freq_exacta=sol_exacta/(2*pi);
+freq=sqrt(lambda(p))/(2*pi);
+end
 
