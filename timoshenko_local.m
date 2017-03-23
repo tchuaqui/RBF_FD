@@ -1,8 +1,8 @@
 clear all
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
-cfstr='cc';
-n=200;
+cfstr='ss';
+n=150;
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
 x_central=find(x_dados==0.5);
