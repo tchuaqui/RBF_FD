@@ -451,7 +451,7 @@ switch cfstr
     case {'ss'}
       x_max=x_t(ceil(n/2),:);  
     case{'cl'}  
-      x_max=x_t(end,:);
+      x_max=x_t(n,:);
 end
 figure(2)
 plot(t,x_max);      
