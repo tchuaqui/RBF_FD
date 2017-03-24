@@ -1,7 +1,7 @@
 clear all
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
-cfstr='ss';
+cfstr='cl';
 n=80;
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
@@ -635,7 +635,7 @@ subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str
 
 %% NEWMARK
 % Gv=0.0001;
-Gv=0;
+Gv=0.00000000001;
 
 C_uu=K_uphia*(K_phiphis^-1)*K_uphis;
 C_ut=K_uphia*(K_phiphis^-1)*K_tphis;
@@ -691,3 +691,20 @@ figure(2)
 plot(t,x_max);      
 hold on
 
+%%
+X=fft(x_max);
+X_mag=abs(X(1:ceil(n_t/2)));
+[pk_vals, pk_locs]=findpeaks(X_mag);
+%remove peaks below threshold
+% inds=find(X_mag(pk_locs)<1);
+% pk_locs(inds)=[];
+
+%determine frequencies
+pk_freqs=zeros(length(pk_locs),1);
+for i=1:length(pk_locs)
+pk_freqs(i)=(pk_locs(i)-1)/t_final;
+end
+
+figure(3)
+plot(X_mag);
+hold on
