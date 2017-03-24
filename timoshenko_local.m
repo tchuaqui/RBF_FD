@@ -1,7 +1,7 @@
 clear all
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
-cfstr='ss';
+cfstr='cl';
 n=100;
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
@@ -405,7 +405,7 @@ subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str
 
 %%
 %----NEWMARK
-% Gv=0.001;
+% Gv=0.0001;
 Gv=0;
 
 C_tt=K_tphia*(K_phiphis^-1)*K_tphis;
@@ -445,15 +445,31 @@ for i=2:n_t
   a_t(:,i)=a0*(x_t(:,i)-x_t(:,i-1))-a2*v_t(:,i-1)-a3*a_t(:,i-1);
   v_t(:,i)=v_t(:,i-1)+a6*a_t(:,i-1)+a7*a_t(:,i);
 end
+switch cfstr
+    case {'cc'}
+      x_max=x_t(ceil(n/2),:);  
+    case {'ss'}
+      x_max=x_t(ceil(n/2),:);  
+    case{'cl'}  
+      x_max=x_t(end,:);
+end
+figure(2)
+plot(t,x_max);      
+hold on
+%%
+X=fft(x_max);
+X_mag=abs(X(1:ceil(n_t/2)));
+[pk_vals, pk_locs]=findpeaks(X_mag);
+%remove peaks below threshold
+% inds=find(X_mag(pk_locs)<1);
+% pk_locs(inds)=[];
 
-x_w=zeros(n,n_t);
-x_max=zeros(n_t,1);
-for i=1:n_t
-x_w(:,i)=x_t(1:n,i);
-x_max(i)=x_w(ceil(n/2),i);   % CASO SIMPLESMENTE APOIADO OU ENCASTRADO
-x_max(i)=x_w(n,i);
+%determine frequencies
+pk_freqs=zeros(length(pk_locs),1);
+for i=1:length(pk_locs)
+pk_freqs(i)=(pk_locs(i)-1)/t_final;
 end
 
-figure(2)
-plot(t,x_max);
+figure(3)
+plot(X_mag);
 hold on
