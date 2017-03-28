@@ -453,7 +453,12 @@ switch cfstr
     case{'cl'}  
       x_max=x_t(n,:);
 end
+
+freq=sqrt(lambda(p))/(2*pi);
+yharm=x_0(n)*cos(2*pi*freq*t);      %COM A AMPLITUDE IGUAL AO CASO CL
 figure(2)
+plot(t,yharm);
+hold on
 plot(t,x_max);      
 hold on
 %%

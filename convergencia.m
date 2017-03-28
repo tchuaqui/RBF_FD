@@ -1,4 +1,4 @@
-nmax=100;
+nmax=150;
 y=zeros(1,nmax-9); y_exacta=zeros(1,nmax-9);
 for i=10:nmax
   [freq,freq_exacta]=conv(i); 
