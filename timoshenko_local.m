@@ -59,6 +59,8 @@ D11=D11+Q11(i)*I2(i);   %c1theta
 % Mu=Mu+Q11(i)*I1(i);
 % Mtheta=Mtheta+Q11(i)*I2(i);
 end
+G=0;                                                        %distribuiçao linear do potencial
+% G=(e31^2)*(I2(1)-I0(1)*zm(1)^2)/ezz+(e31^2)*(I2(2)-I0(2)*zm(2)^2)/ezz;   %distribuiçao quadratica do potencial
 
 F1=e31*I0(1)/esp(1);
 F2=e31*I0(2)/esp(2);
@@ -242,7 +244,7 @@ pesos_phiphia(i,:)=matriz_pesos\rhs_phiphia(:,i);         %%%%%%%%%%%%%%%%%%%%%%
         rhs_1_theta(:,i)=B55*dgdx(c,x_dados(i),sub_dominio(:));
         
         rhs_2_w(:,i)=-B55*dgdx(c,x_dados(i),sub_dominio(:));
-        rhs_2_theta(:,i)=D11*d2gdx2(c,x_dados(i),sub_dominio(:))-B55*g(c,x_dados(i),sub_dominio(:));
+        rhs_2_theta(:,i)=(D11+G)*d2gdx2(c,x_dados(i),sub_dominio(:))-B55*g(c,x_dados(i),sub_dominio(:));
         
         arhs_1_w(:,i)=-J0*g(c,x_dados(i),sub_dominio(:));
         arhs_1_theta(:,i)=0;
