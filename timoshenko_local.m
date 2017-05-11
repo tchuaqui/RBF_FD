@@ -2,7 +2,7 @@ clear all
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
-n=50;
+n=5;
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
 x_central=find(x_dados==0.5);
@@ -73,20 +73,35 @@ I_2=ezz*I0(2)/(esp(2)^2);
 
 
 %% INICIACAO DAS MATRIZES (PARA DETERMINACAO DOS PESOS) RIGIDEZ E INERCIA
-rhs_1_w=[zeros(5,numel(x_dados))];                  
-rhs_1_theta=[zeros(5,numel(x_dados))];
-rhs_2_w=[zeros(5,numel(x_dados))];
-rhs_2_theta=[zeros(5,numel(x_dados))];
-rhs_2_phis=[zeros(5,numel(x_dados))];
-rhs_2_phia=[zeros(5,numel(x_dados))];
-arhs_1_w=[zeros(5,numel(x_dados))];
-arhs_1_theta=[zeros(5,numel(x_dados))];
-arhs_2_w=[zeros(5,numel(x_dados))];
-arhs_2_theta=[zeros(5,numel(x_dados))];
-rhs_phiphis=[zeros(5,numel(x_dados))];
-rhs_phiphia=[zeros(5,numel(x_dados))];
+rhs_1_w=[zeros(4,numel(x_dados))];                  
+rhs_1_theta=[zeros(4,numel(x_dados))];
+rhs_2_w=[zeros(4,numel(x_dados))];
+rhs_2_theta=[zeros(4,numel(x_dados))];
+rhs_2_phis=[zeros(4,numel(x_dados))];
+rhs_2_phia=[zeros(4,numel(x_dados))];
+arhs_1_w=[zeros(4,numel(x_dados))];
+arhs_1_theta=[zeros(4,numel(x_dados))];
+arhs_2_w=[zeros(4,numel(x_dados))];
+arhs_2_theta=[zeros(4,numel(x_dados))];
+rhs_phiphis=[zeros(4,numel(x_dados))];
+rhs_phiphia=[zeros(4,numel(x_dados))];
 
-c=0.1;  %2*dist/sqrt(sqrt(3))        %SHAPE PARAMETER   
+
+% 
+% rhs_1_w=[zeros(5,numel(x_dados))];                  
+% rhs_1_theta=[zeros(5,numel(x_dados))];
+% rhs_2_w=[zeros(5,numel(x_dados))];
+% rhs_2_theta=[zeros(5,numel(x_dados))];
+% rhs_2_phis=[zeros(5,numel(x_dados))];
+% rhs_2_phia=[zeros(5,numel(x_dados))];
+% arhs_1_w=[zeros(5,numel(x_dados))];
+% arhs_1_theta=[zeros(5,numel(x_dados))];
+% arhs_2_w=[zeros(5,numel(x_dados))];
+% arhs_2_theta=[zeros(5,numel(x_dados))];
+% rhs_phiphis=[zeros(5,numel(x_dados))];
+% rhs_phiphia=[zeros(5,numel(x_dados))];
+
+c=2;  %2*dist/sqrt(sqrt(3))        %SHAPE PARAMETER   
 
 %% CONDICOES DE FRONTEIRA E DOMINIO
 for i=1:numel(x_dados)
@@ -96,128 +111,131 @@ if i==1
             case {'ss'}
         rhs_1_w(1:3,i)=g(c,x_dados(i),sub_dominio(:));           
         rhs_1_w(4,i)=1;
-        rhs_1_w(5,i)=x_dados(i);
+%         rhs_1_w(5,i)=x_dados(i);
         rhs_1_theta(1:3,i)=0;                                    
         rhs_1_theta(4,i)=0;
-        rhs_1_theta(5,i)=0;
+%         rhs_1_theta(5,i)=0;
         rhs_2_w(1:3,i)=0;                                        
         rhs_2_w(4,i)=0;
-        rhs_2_w(5,i)=0;
+%         rhs_2_w(5,i)=0;
         rhs_2_theta(1:3,i)=dgdx(c,x_dados(i),sub_dominio(:));    
         rhs_2_theta(4,i)=0;
-        rhs_2_theta(5,i)=1;
+%         rhs_2_theta(5,i)=1;
         
         arhs_1_w(1:3,i)=0;                                      
         arhs_1_w(4,i)=0;  
-        arhs_1_w(5,i)=0;
+%         arhs_1_w(5,i)=0;
         arhs_1_theta(1:3,i)=0;                                   
         arhs_1_theta(4,i)=0;
-        arhs_1_theta(5,i)=0;
+%         arhs_1_theta(5,i)=0;
         arhs_2_w(1:3,i)=0;                                       
         arhs_2_w(4,i)=0;
-        arhs_2_w(5,i)=0;
+%         arhs_2_w(5,i)=0;
         arhs_2_theta(1:3,i)=0;                                   
         arhs_2_theta(4,i)=0;
-        arhs_2_theta(5,i)=0;
+%         arhs_2_theta(5,i)=0;
         
         rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));     
         rhs_2_phis(4,i)=0;   %%%%%%   
-        rhs_2_phis(5,i)=H1;
+%         rhs_2_phis(5,i)=H1;
         rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));    
         rhs_2_phia(4,i)=0;   %%%%%%
-        rhs_2_phia(5,i)=H2;
+%         rhs_2_phia(5,i)=H2;
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));      
         rhs_phiphis(4,i)=I_1;   %%%%%%%%%%
-        rhs_phiphis(5,i)=I_1*x_dados(i);
+%         rhs_phiphis(5,i)=I_1*x_dados(i);
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));      
         rhs_phiphia(4,i)=I_2;   %%%%%%%%%%%
-        rhs_phiphia(5,i)=I_2*x_dados(i);
+%         rhs_phiphia(5,i)=I_2*x_dados(i);
            
             case {'cc'}
         rhs_1_w(1:3,i)=g(c,x_dados(i),sub_dominio(:));                
         rhs_1_w(4,i)=1;    
-        rhs_1_w(5,i)=x_dados(i);  
+%         rhs_1_w(5,i)=x_dados(i);  
         rhs_1_theta(1:3,i)=0;                                         
         rhs_1_theta(4,i)=0;
-        rhs_1_theta(5,i)=0;
+%         rhs_1_theta(5,i)=0;
         rhs_2_w(1:3,i)=0;                                              
         rhs_2_w(4,i)=0;
-        rhs_2_w(5,i)=0;
+%         rhs_2_w(5,i)=0;
         rhs_2_theta(1:3,i)=g(c,x_dados(i),sub_dominio(:));              
         rhs_2_theta(4,i)=1;
-        rhs_2_theta(5,i)=x_dados(i);
+%         rhs_2_theta(5,i)=x_dados(i);
         
         arhs_1_w(1:3,i)=0;                                             
         arhs_1_w(4,i)=0;
-        arhs_1_w(5,i)=0;
+%         arhs_1_w(5,i)=0;
         arhs_1_theta(1:3,i)=0;                                         
         arhs_1_theta(4,i)=0;
-        arhs_1_theta(5,i)=0;
+%         arhs_1_theta(5,i)=0;
         arhs_2_w(1:3,i)=0;                                             
         arhs_2_w(4,i)=0;
-        arhs_2_w(5,i)=0;
+%         arhs_2_w(5,i)=0;
         arhs_2_theta(1:3,i)=0;                                         
         arhs_2_theta(4,i)=0;
-        arhs_2_theta(5,i)=0;
+%         arhs_2_theta(5,i)=0;
         
         rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));      
         rhs_2_phis(4,i)=0; %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phis(5,i)=H1;
+%         rhs_2_phis(5,i)=H1;
         rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));     
         rhs_2_phia(4,i)=0;%%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(5,i)=H2;
+%         rhs_2_phia(5,i)=H2;
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));       
         rhs_phiphis(4,i)=I_1;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphis(5,i)=I_1*x_dados(i);
+%         rhs_phiphis(5,i)=I_1*x_dados(i);
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));      
         rhs_phiphia(4,i)=I_2;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphia(5,i)=I_2*x_dados(i);
+%         rhs_phiphia(5,i)=I_2*x_dados(i);
             
             case {'cl'}
         rhs_1_w(1:3,i)=g(c,x_dados(i),sub_dominio(:));            
         rhs_1_w(4,i)=1;
-        rhs_1_w(5,i)=x_dados(i);
+%         rhs_1_w(5,i)=x_dados(i);
         rhs_1_theta(1:3,i)=0;                                     
         rhs_1_theta(4,i)=0;
-        rhs_1_theta(5,i)=0;
+%         rhs_1_theta(5,i)=0;
         rhs_2_w(1:3,i)=0;                                         
         rhs_2_w(4,i)=0;
-        rhs_2_w(5,i)=0;
+%         rhs_2_w(5,i)=0;
         rhs_2_theta(1:3,i)=g(c,x_dados(i),sub_dominio(:));        
         rhs_2_theta(4,i)=1;
-        rhs_2_theta(5,i)=x_dados(i);
+%         rhs_2_theta(5,i)=x_dados(i);
         
         arhs_1_w(1:3,i)=0;                                        
         arhs_1_w(4,i)=0;
-        arhs_1_w(5,i)=0;
+%         arhs_1_w(5,i)=0;
         arhs_1_theta(1:3,i)=0;                                    
         arhs_1_theta(4,i)=0;
-        arhs_1_theta(5,i)=0;
+%         arhs_1_theta(5,i)=0;
         arhs_2_w(1:3,i)=0;                                        
         arhs_2_w(4,i)=0;
-        arhs_2_w(5,i)=0;
+%         arhs_2_w(5,i)=0;
         arhs_2_theta(1:3,i)=0;                                    
         arhs_2_theta(4,i)=0;
-        arhs_2_theta(5,i)=0;
+%         arhs_2_theta(5,i)=0;
         
         rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));   
         rhs_2_phis(4,i)=0;   %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phis(5,i)=H1;
+%         rhs_2_phis(5,i)=H1;
         rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));   
         rhs_2_phia(4,i)=0;    %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(5,i)=H2;
+%         rhs_2_phia(5,i)=H2;
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));    
         rhs_phiphis(4,i)=I_1; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphis(5,i)=I_1*x_dados(i);
+%         rhs_phiphis(5,i)=I_1*x_dados(i);
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));    
         rhs_phiphia(4,i)=I_2; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphia(5,i)=I_2*x_dados(i);
+%         rhs_phiphia(5,i)=I_2*x_dados(i);
         end
 
 [Axi,Axj]=meshgrid(sub_dominio);
-matriz_pesos=[g(c,Axi,Axj) ones(3,1) [x_dados(i);x_dados(i+1);x_dados(i+2)];    %!!!!!!!!!!!!!!!!!!!!
-              ones(1,3) 0 0;
-              [x_dados(i) x_dados(i+1) x_dados(i+2)] 0 0]; 
+matriz_pesos=[g(c,Axi,Axj) ones(3,1);    %!!!!!!!!!!!!!!!!!!!!
+              ones(1,3) 0];
+       
+% matriz_pesos=[g(c,Axi,Axj) ones(3,1) [x_dados(i);x_dados(i+1);x_dados(i+2)];    %!!!!!!!!!!!!!!!!!!!!
+%               ones(1,3) 0 0;
+%               [x_dados(i) x_dados(i+1) x_dados(i+2)] 0 0]; 
 
 pesos_1_w(i,:)=matriz_pesos\rhs_1_w(:,i);
 pesos_1_theta(i,:)=matriz_pesos\rhs_1_theta(:,i);
@@ -240,127 +258,129 @@ pesos_phiphia(i,:)=matriz_pesos\rhs_phiphia(:,i);         %%%%%%%%%%%%%%%%%%%%%%
             case {'ss'}
         rhs_1_w(1:3,i)=g(c,x_dados(i),sub_dominio(:));            
         rhs_1_w(4,i)=1;
-        rhs_1_w(5,i)=x_dados(i);
+%         rhs_1_w(5,i)=x_dados(i);
         rhs_1_theta(1:3,i)=0;                                     
         rhs_1_theta(4,i)=0;
-        rhs_1_theta(5,i)=0;
+%         rhs_1_theta(5,i)=0;
         rhs_2_w(1:3,i)=0;                                         
         rhs_2_w(4,i)=0;
-        rhs_2_w(5,i)=0;
+%         rhs_2_w(5,i)=0;
         rhs_2_theta(1:3,i)=dgdx(c,x_dados(i),sub_dominio(:));     
         rhs_2_theta(4,i)=0;
-        rhs_2_theta(5,i)=1;
+%         rhs_2_theta(5,i)=1;
         
         arhs_1_w(1:3,i)=0;                                        
         arhs_1_w(4,i)=0;
-        arhs_1_w(5,i)=0;
+%         arhs_1_w(5,i)=0;
         arhs_1_theta(1:3,i)=0;                                    
         arhs_1_theta(4,i)=0;
-        arhs_1_theta(5,i)=0;
+%         arhs_1_theta(5,i)=0;
         arhs_2_w(1:3,i)=0;                                        
         arhs_2_w(4,i)=0;
-        arhs_2_w(5,i)=0;
+%         arhs_2_w(5,i)=0;
         arhs_2_theta(1:3,i)=0;                                    
         arhs_2_theta(4,i)=0;
-        arhs_2_theta(5,i)=0;
+%         arhs_2_theta(5,i)=0;
         
         rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));    
         rhs_2_phis(4,i)=0;   %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phis(5,i)=H1;
+%         rhs_2_phis(5,i)=H1;
         rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));    
         rhs_2_phia(4,i)=0;     %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(5,i)=H2;
+%         rhs_2_phia(5,i)=H2;
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));     
         rhs_phiphis(4,i)=I_1;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphis(5,i)=I_1*x_dados(i);
+%         rhs_phiphis(5,i)=I_1*x_dados(i);
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));     
         rhs_phiphia(4,i)=I_2; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphia(5,i)=I_2*x_dados(i);
+%         rhs_phiphia(5,i)=I_2*x_dados(i);
         
              case {'cc'}
         rhs_1_w(1:3,i)=g(c,x_dados(i),sub_dominio(:));            
         rhs_1_w(4,i)=1;
-        rhs_1_w(5,i)=x_dados(i);
+%         rhs_1_w(5,i)=x_dados(i);
         rhs_1_theta(1:3,i)=0;                                      
         rhs_1_theta(4,i)=0;
-        rhs_1_theta(5,i)=0;
+%         rhs_1_theta(5,i)=0;
         rhs_2_w(1:3,i)=0;                                         
         rhs_2_w(4,i)=0;
-        rhs_2_w(5,i)=0;
+%         rhs_2_w(5,i)=0;
         rhs_2_theta(1:3,i)=g(c,x_dados(i),sub_dominio(:));        
         rhs_2_theta(4,i)=1;
-        rhs_2_theta(5,i)=x_dados(i);
+%         rhs_2_theta(5,i)=x_dados(i);
         
         arhs_1_w(1:3,i)=0;                                      
         arhs_1_w(4,i)=0;
-        arhs_1_w(5,i)=0;
+%         arhs_1_w(5,i)=0;
         arhs_1_theta(1:3,i)=0;                                  
         arhs_1_theta(4,i)=0;
-        arhs_1_theta(5,i)=0;
+%         arhs_1_theta(5,i)=0;
         arhs_2_w(1:3,i)=0;                                      
         arhs_2_w(4,i)=0;
-        arhs_2_w(5,i)=0;
+%         arhs_2_w(5,i)=0;
         arhs_2_theta(1:3,i)=0;                                  
         arhs_2_theta(4,i)=0;
-        arhs_2_theta(5,i)=0;
+%         arhs_2_theta(5,i)=0;
         
         rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));   
         rhs_2_phis(4,i)=0;   %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phis(5,i)=H1;
+%         rhs_2_phis(5,i)=H1;
         rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));  
         rhs_2_phia(4,i)=0;  %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(5,i)=H2;
+%         rhs_2_phia(5,i)=H2;
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));    
         rhs_phiphis(4,i)=I_1; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphis(5,i)=I_1*x_dados(i);
+%         rhs_phiphis(5,i)=I_1*x_dados(i);
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));   
         rhs_phiphia(4,i)=I_2; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphia(5,i)=I_2*x_dados(i);
+%         rhs_phiphia(5,i)=I_2*x_dados(i);
        
              case {'cl'}
         rhs_1_w(1:3,i)=dgdx(c,x_dados(i),sub_dominio(:));        
         rhs_1_w(4,i)=0;
-        rhs_1_w(5,i)=1;
+%         rhs_1_w(5,i)=1;
         rhs_1_theta(1:3,i)=g(c,x_dados(i),sub_dominio(:));      
         rhs_1_theta(4,i)=1;
-        rhs_1_theta(5,i)=x_dados(i);
+%         rhs_1_theta(5,i)=x_dados(i);
         rhs_2_w(1:3,i)=0;                                        
         rhs_2_w(4,i)=0;
-        rhs_2_w(5,i)=0;
+%         rhs_2_w(5,i)=0;
         rhs_2_theta(1:3,i)=dgdx(c,x_dados(i),sub_dominio(:));    
         rhs_2_theta(4,i)=0;
-        rhs_2_theta(5,i)=1; 
+%         rhs_2_theta(5,i)=1; 
         
         arhs_1_w(1:3,i)=0;                       
         arhs_1_w(4,i)=0;
-        arhs_1_w(5,i)=0;
+%         arhs_1_w(5,i)=0;
         arhs_1_theta(1:3,i)=0;                    
         arhs_1_theta(4,i)=0;
-        arhs_1_theta(5,i)=0;
+%         arhs_1_theta(5,i)=0;
         arhs_2_w(1:3,i)=0;                        
         arhs_2_w(4,i)=0;
-        arhs_2_w(5,i)=0;
+%         arhs_2_w(5,i)=0;
         arhs_2_theta(1:3,i)=0;                   
         arhs_2_theta(4,i)=0;
-        arhs_2_theta(5,i)=0;
+%         arhs_2_theta(5,i)=0;
         
         rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));  
         rhs_2_phis(4,i)=0;   %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phis(5,i)=H1;
+%         rhs_2_phis(5,i)=H1;
         rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));  
         rhs_2_phia(4,i)=0;  %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(5,i)=H2;
+%         rhs_2_phia(5,i)=H2;
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));   
         rhs_phiphis(4,i)=I_1; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphis(5,i)=I_1*x_dados(i);
+%         rhs_phiphis(5,i)=I_1*x_dados(i);
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));   
         rhs_phiphia(4,i)=I_2; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphia(5,i)=I_2*x_dados(i);
+%         rhs_phiphia(5,i)=I_2*x_dados(i);
          end
 [Axi,Axj]=meshgrid(sub_dominio);
-matriz_pesos=[g(c,Axi,Axj) ones(3,1) [x_dados(i);x_dados(i-1);x_dados(i-2)];    %!!!!!!!!!!!!!!!!!!!!
-              ones(1,3) 0 0;
-              [x_dados(i) x_dados(i-1) x_dados(i-2)] 0 0]; 
+matriz_pesos=[g(c,Axi,Axj) ones(3,1);    %!!!!!!!!!!!!!!!!!!!!
+              ones(1,3) 0];
+% matriz_pesos=[g(c,Axi,Axj) ones(3,1) [x_dados(i);x_dados(i-1);x_dados(i-2)];    %!!!!!!!!!!!!!!!!!!!!
+%               ones(1,3) 0 0;
+%               [x_dados(i) x_dados(i-1) x_dados(i-2)] 0 0]; 
           
 pesos_1_w(i,:)=matriz_pesos\rhs_1_w(:,i);
 pesos_1_theta(i,:)=matriz_pesos\rhs_1_theta(:,i);
@@ -382,47 +402,49 @@ else
         
         rhs_1_w(1:3,i)=B55*d2gdx2(c,x_dados(i),sub_dominio(:));                                             
         rhs_1_w(4,i)=0;
-        rhs_1_w(5,i)=0;
+%         rhs_1_w(5,i)=0;
         rhs_1_theta(1:3,i)=B55*dgdx(c,x_dados(i),sub_dominio(:));                                          
         rhs_1_theta(4,i)=0;
-        rhs_1_theta(5,i)=B55;
+%         rhs_1_theta(5,i)=B55;
         rhs_2_w(1:3,i)=-B55*dgdx(c,x_dados(i),sub_dominio(:));                                             
         rhs_2_w(4,i)=0;
-        rhs_2_w(5,i)=-B55;
+%         rhs_2_w(5,i)=-B55;
         rhs_2_theta(1:3,i)=(D11+G)*d2gdx2(c,x_dados(i),sub_dominio(:))-B55*g(c,x_dados(i),sub_dominio(:)); 
         rhs_2_theta(4,i)=-B55;
-        rhs_2_theta(5,i)=-B55*x_dados(i);
+%         rhs_2_theta(5,i)=-B55*x_dados(i);
         
         arhs_1_w(1:3,i)=-J0*g(c,x_dados(i),sub_dominio(:));      
         arhs_1_w(4,i)=-J0;
-        arhs_1_w(5,i)=-J0*x_dados(i);
+%         arhs_1_w(5,i)=-J0*x_dados(i);
         arhs_1_theta(1:3,i)=0;                                   
         arhs_1_theta(4,i)=0;
-        arhs_1_theta(5,i)=0;
+%         arhs_1_theta(5,i)=0;
         arhs_2_w(1:3,i)=0;                                        
         arhs_2_w(4,i)=0;
-        arhs_2_w(5,i)=0;
+%         arhs_2_w(5,i)=0;
         arhs_2_theta(1:3,i)=-J2*g(c,x_dados(i),sub_dominio(:));  
         arhs_2_theta(4,i)=-J2;
-        arhs_2_theta(5,i)=-J2*x_dados(i);
+%         arhs_2_theta(5,i)=-J2*x_dados(i);
         
         rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));   
         rhs_2_phis(4,i)=0;  %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phis(5,i)=H1;
+%         rhs_2_phis(5,i)=H1;
         rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));   
         rhs_2_phia(4,i)=0;  %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(5,i)=H2;
+%         rhs_2_phia(5,i)=H2;
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));    
         rhs_phiphis(4,i)=I_1; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphis(5,i)=I_1*x_dados(i);
+%         rhs_phiphis(5,i)=I_1*x_dados(i);
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));    
         rhs_phiphia(4,i)=I_2; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphia(5,i)=I_2*x_dados(i);
+%         rhs_phiphia(5,i)=I_2*x_dados(i);
         
 [Axi,Axj]=meshgrid(sub_dominio);
-matriz_pesos=[g(c,Axi,Axj) ones(3,1) [x_dados(i);x_dados(i-1);x_dados(i+1)];    %!!!!!!!!!!!!!!!!!!!!
-              ones(1,3) 0 0;
-              [x_dados(i) x_dados(i-1) x_dados(i+1)] 0 0]; 
+matriz_pesos=[g(c,Axi,Axj) ones(3,1);    %!!!!!!!!!!!!!!!!!!!!
+              ones(1,3) 0];
+% matriz_pesos=[g(c,Axi,Axj) ones(3,1) [x_dados(i);x_dados(i-1);x_dados(i+1)];    %!!!!!!!!!!!!!!!!!!!!
+%               ones(1,3) 0 0;
+%               [x_dados(i) x_dados(i-1) x_dados(i+1)] 0 0]; 
 
 pesos_1_w(i,:)=matriz_pesos\rhs_1_w(:,i);
 pesos_1_theta(i,:)=matriz_pesos\rhs_1_theta(:,i);

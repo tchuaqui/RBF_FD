@@ -307,6 +307,8 @@ pesos_phiphia(i,:)=matriz_pesos\rhs_phiphia(:,i);         %%%%%%%%%%%%%%%%%%%%%%
        rhs_2_phia(3+1:end,i)=H2*dpol(1:p,i);
        rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
        rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
+       arhs_1_w(3+1:end,i)=-J0*pol(1:p,i);
+       arhs_2_theta(3+1:end,i)=-J2*pol(1:p,i);
        end
                 
 [Axi,Axj]=meshgrid(sub_dominio);
