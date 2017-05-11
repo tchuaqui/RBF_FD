@@ -1,8 +1,10 @@
 clear all
 nmax=150;
+p=0;   %nº de polinomios
+c=5;  %shape parameter
 y=zeros(1,nmax-9); y_exacta=zeros(1,nmax-9);
-for i=10:nmax
-  [freq,freq_exacta]=conv(i); 
+for i=5:nmax
+  [freq,freq_exacta]=conv(i,p,c); 
   y(i-9)=freq;
   y_exacta(i-9)=freq_exacta;
   disp(i/nmax*100);
