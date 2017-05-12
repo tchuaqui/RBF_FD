@@ -139,20 +139,20 @@ if i==1
        rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
        end
             case {'cl'}
-        rhs_1_w(1:3,i)=g(c,x_dados(i),sub_dominio(:));
+        rhs_1_w(1:3,i)=g(c,sub_dominio(:),x_dados(i));
         rhs_1_theta(1:end,i)=0;
         rhs_2_w(1:end,i)=0;
-        rhs_2_theta(1:3,i)=g(c,x_dados(i),sub_dominio(:));
+        rhs_2_theta(1:3,i)=g(c,sub_dominio(:),x_dados(i));
         
         arhs_1_w(1:end,i)=0;
         arhs_1_theta(1:end,i)=0;
         arhs_2_w(1:end,i)=0;
         arhs_2_theta(1:end,i)=0;
         
-        rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));    %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));     %%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phis(1:3,i)=H1*dgdx(c,sub_dominio(:),x_dados(i));    %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phia(1:3,i)=H2*dgdx(c,sub_dominio(:),x_dados(i));     %%%%%%%%%%%%%%%%%%%%%%
+        rhs_phiphis(1:3,i)=I_1*g(c,sub_dominio(:),x_dados(i));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        rhs_phiphia(1:3,i)=I_2*g(c,sub_dominio(:),x_dados(i));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         if p~=0
        rhs_1_w(3+1:end,i)=pol(1:p,i);
@@ -236,20 +236,20 @@ pesos_phiphia(i,:)=matriz_pesos\rhs_phiphia(:,i);         %%%%%%%%%%%%%%%%%%%%%%
        rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
        end
              case {'cl'}
-        rhs_1_w(1:3,i)=dgdx(c,x_dados(i),sub_dominio(:));
-        rhs_1_theta(1:3,i)=g(c,x_dados(i),sub_dominio(:));
+        rhs_1_w(1:3,i)=dgdx(c,sub_dominio(:),x_dados(i));
+        rhs_1_theta(1:3,i)=g(c,sub_dominio(:),x_dados(i));
         rhs_2_w(1:end,i)=0;
-        rhs_2_theta(1:3,i)=dgdx(c,x_dados(i),sub_dominio(:));
+        rhs_2_theta(1:3,i)=dgdx(c,sub_dominio(:),x_dados(i));
         
         arhs_1_w(1:end,i)=0;
         arhs_1_theta(1:end,i)=0;
         arhs_2_w(1:end,i)=0;
         arhs_2_theta(1:end,i)=0;
         
-        rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));    %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));     %%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phis(1:3,i)=H1*dgdx(c,sub_dominio(:),x_dados(i));    %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phia(1:3,i)=H2*dgdx(c,sub_dominio(:),x_dados(i));     %%%%%%%%%%%%%%%%%%%%%%
+        rhs_phiphis(1:3,i)=I_1*g(c,sub_dominio(:),x_dados(i));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        rhs_phiphia(1:3,i)=I_2*g(c,sub_dominio(:),x_dados(i));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        
        if p~=0
        rhs_1_w(3+1:end,i)=dpol(1:p,i);
@@ -283,20 +283,20 @@ pesos_phiphia(i,:)=matriz_pesos\rhs_phiphia(:,i);         %%%%%%%%%%%%%%%%%%%%%%
    else
         
         sub_dominio=[x_dados(i), x_dados(i-1), x_dados(i+1)];
-        rhs_1_w(1:3,i)=B55*d2gdx2(c,x_dados(i),sub_dominio(:));
-        rhs_1_theta(1:3,i)=B55*dgdx(c,x_dados(i),sub_dominio(:));
-        rhs_2_w(1:3,i)=-B55*dgdx(c,x_dados(i),sub_dominio(:));
-        rhs_2_theta(1:3,i)=(D11+G)*d2gdx2(c,x_dados(i),sub_dominio(:))-B55*g(c,x_dados(i),sub_dominio(:));
+        rhs_1_w(1:3,i)=B55*d2gdx2(c,sub_dominio(:),x_dados(i));
+        rhs_1_theta(1:3,i)=B55*dgdx(c,sub_dominio(:),x_dados(i));
+        rhs_2_w(1:3,i)=-B55*dgdx(c,sub_dominio(:),x_dados(i));
+        rhs_2_theta(1:3,i)=(D11+G)*d2gdx2(c,sub_dominio(:),x_dados(i))-B55*g(c,sub_dominio(:),x_dados(i));
         
-        arhs_1_w(1:3,i)=-J0*g(c,x_dados(i),sub_dominio(:));
+        arhs_1_w(1:3,i)=-J0*g(c,sub_dominio(:),x_dados(i));
         arhs_1_theta(1:end,i)=0;
         arhs_2_w(1:end,i)=0;
-        arhs_2_theta(1:3,i)=-J2*g(c,x_dados(i),sub_dominio(:));
+        arhs_2_theta(1:3,i)=-J2*g(c,sub_dominio(:),x_dados(i));
         
-        rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));    %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));     %%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phis(1:3,i)=H1*dgdx(c,sub_dominio(:),x_dados(i));    %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phia(1:3,i)=H2*dgdx(c,sub_dominio(:),x_dados(i));     %%%%%%%%%%%%%%%%%%%%%%
+        rhs_phiphis(1:3,i)=I_1*g(c,sub_dominio(:),x_dados(i));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        rhs_phiphia(1:3,i)=I_2*g(c,sub_dominio(:),x_dados(i));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         if p~=0      %NAAO SEI SE TA CERTO PQ O SUBDOMINIO TEM ORDEM DIFERENTE DE XJ!!!!!!!!!!!!
        rhs_1_w(3+1:end,i)=B55*d2pol(1:p,i);
