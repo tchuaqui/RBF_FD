@@ -3,7 +3,10 @@ clear all
 
 syms c xi xj  
 
-rbf=sqrt((xi-xj)^2+c^2); %Multiquadrica   %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+% rbf=sqrt((xi-xj)^2+c^2); %Multiquadrica   %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+rbf=sqrt(((xi-xj)^2)*(1/c^2)+1);
+
+% rbf=(abs(xi-xj)); %Polyharmonic spline
 pol=sym('1');
 % rbf=((xi-xj)^2+c^2)^(-1/2); %Multiquadrica Inversa
 % rbf=sqrt((xi-xj)^2+c^2)^2*log(sqrt((xi-xj)^2+c^2));%TPS 
