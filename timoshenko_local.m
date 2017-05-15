@@ -413,8 +413,8 @@ K_phiphia(1,1:3)=pesos_phiphia(1,1:3);   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 K_phiphia(n,n-2:n)=pesos_phiphia(n,3:-1:1);   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % L_TOTAL FINAL (PODE SER SMART, CLOSE CIRCUIT)
-% L_total(n+1:2*n,n+1:2*n)=L_total(n+1:2*n,n+1:2*n)+K_tphis*(K_phiphis^-1)*K_tphis;   %SMART (1 SENSOR E 1 ATUADOR)
-L_total(n+1:2*n,n+1:2*n)=L_total(n+1:2*n,n+1:2*n);                                  %CLOSED-CIRCUIT 0V
+L_total(n+1:2*n,n+1:2*n)=L_total(n+1:2*n,n+1:2*n)+K_tphis*(K_phiphis^-1)*K_tphis;   %SMART (1 SENSOR E 1 ATUADOR)
+% L_total(n+1:2*n,n+1:2*n)=L_total(n+1:2*n,n+1:2*n);                                  %CLOSED-CIRCUIT 0V
 
 
 % TERMOS DE FRONTEIRA
