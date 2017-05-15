@@ -3,7 +3,7 @@ x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
 n=100;       % nº de nos
-p=4;    %nº de polinomios
+p=1;    %nº de polinomios
 c=1;     %shape parameter
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
@@ -132,10 +132,10 @@ if i==1
         arhs_3_w(1:end,i)=0;
         arhs_3_theta(1:end,i)=0;
         
-        rhs_1_phis(1:3,i)=F1*dgdx(c,x_dados(i),sub_dominio(:));   
-        rhs_1_phia(1:3,i)=F2*dgdx(c,x_dados(i),sub_dominio(:));  
-        rhs_3_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));   
-        rhs_3_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));   
+        rhs_1_phis(1:end,i)=0;   
+        rhs_1_phia(1:end,i)=0;  
+        rhs_3_phis(1:3,i)=H1*g(c,x_dados(i),sub_dominio(:));   
+        rhs_3_phia(1:3,i)=H2*g(c,x_dados(i),sub_dominio(:));   
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  
         
@@ -144,10 +144,8 @@ if i==1
         rhs_2_w(3+1:end,i)=pol(1:p,i);
         rhs_3_u(3+1:end,i)=(C11+E)*dpol(1:p,i);
         rhs_3_theta(3+1:end,i)=(D11+G)*dpol(1:p,i);
-        rhs_1_phis(3+1:end,i)=F1*dpol(1:p,i);
-        rhs_1_phia(3+1:end,i)=F2*dpol(1:p,i);
-        rhs_3_phis(3+1:end,i)=H1*dpol(1:p,i);
-        rhs_3_phia(3+1:end,i)=H2*dpol(1:p,i);
+        rhs_3_phis(3+1:end,i)=H1*pol(1:p,i);
+        rhs_3_phia(3+1:end,i)=H2*pol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
         rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
         end
@@ -172,10 +170,10 @@ if i==1
         arhs_3_w(1:end,i)=0;
         arhs_3_theta(1:end,i)=0;
         
-        rhs_1_phis(1:3,i)=F1*dgdx(c,x_dados(i),sub_dominio(:));  
-        rhs_1_phia(1:3,i)=F2*dgdx(c,x_dados(i),sub_dominio(:));  
-        rhs_3_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));  
-        rhs_3_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));  
+        rhs_1_phis(1:end,i)=0;  
+        rhs_1_phia(1:end,i)=0;  
+        rhs_3_phis(1:end,i)=0;  
+        rhs_3_phia(1:end,i)=0;  
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  
         
@@ -183,10 +181,6 @@ if i==1
         rhs_1_u(3+1:end,i)=pol(1:p,i);
         rhs_2_w(3+1:end,i)=pol(1:p,i);
         rhs_3_theta(3+1:end,i)=pol(1:p,i);
-        rhs_1_phis(3+1:end,i)=F1*dpol(1:p,i);
-        rhs_1_phia(3+1:end,i)=F2*dpol(1:p,i);
-        rhs_3_phis(3+1:end,i)=H1*dpol(1:p,i);
-        rhs_3_phia(3+1:end,i)=H2*dpol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
         rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
         end
@@ -211,10 +205,10 @@ if i==1
         arhs_3_w(1:end,i)=0;
         arhs_3_theta(1:end,i)=0;
         
-        rhs_1_phis(1:3,i)=F1*dgdx(c,x_dados(i),sub_dominio(:));   
-        rhs_1_phia(1:3,i)=F2*dgdx(c,x_dados(i),sub_dominio(:));  
-        rhs_3_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));   
-        rhs_3_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));   
+        rhs_1_phis(1:end,i)=0;   
+        rhs_1_phia(1:end,i)=0;  
+        rhs_3_phis(1:end,i)=0;   
+        rhs_3_phia(1:end,i)=0;   
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  
         
@@ -222,10 +216,6 @@ if i==1
         rhs_1_u(3+1:end,i)=pol(1:p,i);
         rhs_2_w(3+1:end,i)=pol(1:p,i);
         rhs_3_theta(3+1:end,i)=pol(1:p,i);
-        rhs_1_phis(3+1:end,i)=F1*dpol(1:p,i);
-        rhs_1_phia(3+1:end,i)=F2*dpol(1:p,i);
-        rhs_3_phis(3+1:end,i)=H1*dpol(1:p,i);
-        rhs_3_phia(3+1:end,i)=H2*dpol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
         rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
         end
@@ -285,10 +275,10 @@ elseif  i==numel(x_dados)
         arhs_3_w(1:end,i)=0;
         arhs_3_theta(1:end,i)=0;
         
-        rhs_1_phis(1:3,i)=F1*dgdx(c,x_dados(i),sub_dominio(:));   
-        rhs_1_phia(1:3,i)=F2*dgdx(c,x_dados(i),sub_dominio(:)); 
-        rhs_3_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));   
-        rhs_3_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));   
+        rhs_1_phis(1:end,i)=0;   
+        rhs_1_phia(1:end,i)=0; 
+        rhs_3_phis(1:3,i)=H1*g(c,x_dados(i),sub_dominio(:));   
+        rhs_3_phia(1:3,i)=H2*g(c,x_dados(i),sub_dominio(:));   
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  
         
@@ -297,10 +287,8 @@ elseif  i==numel(x_dados)
         rhs_2_w(3+1:end,i)=pol(1:p,i);
         rhs_3_u(3+1:end,i)=(C11+E)*dpol(1:p,i);
         rhs_3_theta(3+1:end,i)=(D11+G)*dpol(1:p,i);
-        rhs_1_phis(3+1:end,i)=F1*dpol(1:p,i);
-        rhs_1_phia(3+1:end,i)=F2*dpol(1:p,i);
-        rhs_3_phis(3+1:end,i)=H1*dpol(1:p,i);
-        rhs_3_phia(3+1:end,i)=H2*dpol(1:p,i);
+        rhs_3_phis(3+1:end,i)=H1*pol(1:p,i);
+        rhs_3_phia(3+1:end,i)=H2*pol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
         rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
         end
@@ -325,10 +313,10 @@ elseif  i==numel(x_dados)
         arhs_3_w(1:end,i)=0;
         arhs_3_theta(1:end,i)=0;
         
-        rhs_1_phis(1:3,i)=F1*dgdx(c,x_dados(i),sub_dominio(:));   
-        rhs_1_phia(1:3,i)=F2*dgdx(c,x_dados(i),sub_dominio(:)); 
-        rhs_3_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));   
-        rhs_3_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));   
+        rhs_1_phis(1:end,i)=0;   
+        rhs_1_phia(1:end,i)=0; 
+        rhs_3_phis(1:end,i)=0;   
+        rhs_3_phia(1:end,i)=0;   
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  
         
@@ -336,10 +324,6 @@ elseif  i==numel(x_dados)
         rhs_1_u(3+1:end,i)=pol(1:p,i);
         rhs_2_w(3+1:end,i)=pol(1:p,i);
         rhs_3_theta(3+1:end,i)=pol(1:p,i);
-        rhs_1_phis(3+1:end,i)=F1*dpol(1:p,i);
-        rhs_1_phia(3+1:end,i)=F2*dpol(1:p,i);
-        rhs_3_phis(3+1:end,i)=H1*dpol(1:p,i);
-        rhs_3_phia(3+1:end,i)=H2*dpol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
         rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
         end
@@ -367,10 +351,10 @@ elseif  i==numel(x_dados)
         arhs_3_w(1:end,i)=0;
         arhs_3_theta(1:end,i)=0;
         
-        rhs_1_phis(1:3,i)=F1*dgdx(c,x_dados(i),sub_dominio(:));   
-        rhs_1_phia(1:3,i)=F2*dgdx(c,x_dados(i),sub_dominio(:));  
-        rhs_3_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));   
-        rhs_3_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));   
+        rhs_1_phis(1:3,i)=F1*g(c,x_dados(i),sub_dominio(:));   
+        rhs_1_phia(1:3,i)=F2*g(c,x_dados(i),sub_dominio(:));  
+        rhs_3_phis(1:3,i)=H1*g(c,x_dados(i),sub_dominio(:));   
+        rhs_3_phia(1:3,i)=H2*g(c,x_dados(i),sub_dominio(:));   
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  
         
@@ -381,10 +365,10 @@ elseif  i==numel(x_dados)
         rhs_2_theta(3+1:end,i)=B55*pol(1:p,i);
         rhs_3_u(3+1:end,i)=(C11+E)*dpol(1:p,i);
         rhs_3_theta(3+1:end,i)=(D11+G)*dpol(1:p,i);
-        rhs_1_phis(3+1:end,i)=F1*dpol(1:p,i);
-        rhs_1_phia(3+1:end,i)=F2*dpol(1:p,i);
-        rhs_3_phis(3+1:end,i)=H1*dpol(1:p,i);
-        rhs_3_phia(3+1:end,i)=H2*dpol(1:p,i);
+        rhs_1_phis(3+1:end,i)=F1*pol(1:p,i);
+        rhs_1_phia(3+1:end,i)=F2*pol(1:p,i);
+        rhs_3_phis(3+1:end,i)=H1*pol(1:p,i);
+        rhs_3_phia(3+1:end,i)=H2*pol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
         rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
         end
@@ -457,7 +441,7 @@ else
         rhs_2_theta(3+1:end,i)=B55*dpol(1:p,i);
         rhs_3_u(3+1:end,i)=(C11+E)*d2pol(1:p,i);
         rhs_3_w(3+1:end,i)=-B55*dpol(1:p,i);
-        rhs_3_theta(3+1:end,i)=(D11+G)*d2pol(1:p,i);
+        rhs_3_theta(3+1:end,i)=(D11+G)*d2pol(1:p,i)-B55*pol(1:p,i);
         rhs_1_phis(3+1:end,i)=F1*dpol(1:p,i);
         rhs_1_phia(3+1:end,i)=F2*dpol(1:p,i);
         rhs_3_phis(3+1:end,i)=H1*dpol(1:p,i);
@@ -679,7 +663,7 @@ subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str
 
 %% NEWMARK
 % Gv=0.0001;
-Gv=0.00000000001;
+Gv=0.00001;
 
 C_uu=K_uphia*(K_phiphis^-1)*K_uphis;
 C_ut=K_uphia*(K_phiphis^-1)*K_tphis;
@@ -696,7 +680,7 @@ C_total=-Gv*C_total;
 %cond. iniciais 
 vetor_carga=zeros(3*n,1);
 vetor_carga(n+1:2*n-1)=carga;
-solucao_estatica=L_total\vetor_carga;
+solucao_estatica=L_total\vetor_carga; 
 x_0=solucao_estatica; v_0=zeros(3*n,1);
 vetor_f=zeros(3*n,1);   %caso se queira impôr força inicial ao inves de deslocamento inicial
 a_0=pinv(A_total)*(vetor_f-C_total*v_0-L_total*x_0);
