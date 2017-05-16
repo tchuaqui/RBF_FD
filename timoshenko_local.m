@@ -590,10 +590,13 @@ K_phiphis(n,n-2:n)=pesos_phiphis(n,3:-1:1);
 K_phiphia(1,1:3)=pesos_phiphia(1,1:3);    
 K_phiphia(n,n-2:n)=pesos_phiphia(n,3:-1:1); 
 
+%% SMART BEAM
 L_total(1:n,1:n)=L_total(1:n,1:n)+K_uphis*(K_phiphis^-1)*K_uphis;   
 L_total(1:n,2*n+1:3*n)=L_total(1:n,2*n+1:3*n)+K_uphis*(K_phiphis^-1)*K_tphis;   
 L_total(2*n+1:3*n,1:n)=L_total(2*n+1:3*n,1:n)+K_tphis*(K_phiphis^-1)*K_uphis;   
 L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)+K_tphis*(K_phiphis^-1)*K_tphis; 
+%% CLOSED CIRCUIT 0V
+%%
 
 L_total(1,1:end)=0; L_total(n,1:end)=0; L_total(n+1,1:end)=0; L_total(2*n,1:end)=0;   
 L_total(2*n+1,1:end)=0; L_total(3*n,1:end)=0; 
