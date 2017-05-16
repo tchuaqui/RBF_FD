@@ -105,16 +105,16 @@ if i==1
         arhs_2_w(1:end,i)=0;
         arhs_2_theta(1:end,i)=0;
         
-        rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));    %%%%%%
-        rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));     %%%%%%
+        rhs_2_phis(1:3,i)=H1*g(c,x_dados(i),sub_dominio(:));    %%%%%%
+        rhs_2_phia(1:3,i)=H2*g(c,x_dados(i),sub_dominio(:));     %%%%%%
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%
            
         if p~=0
         rhs_1_w(3+1:end,i)=pol(1:p,i);
         rhs_2_theta(3+1:end,i)=dpol(1:p,i);
-        rhs_2_phis(3+1:end,i)=H1*dpol(1:p,i);
-        rhs_2_phia(3+1:end,i)=H2*dpol(1:p,i);
+        rhs_2_phis(3+1:end,i)=H1*pol(1:p,i);
+        rhs_2_phia(3+1:end,i)=H2*pol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
         rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
         end
@@ -129,16 +129,14 @@ if i==1
         arhs_2_w(1:end,i)=0;
         arhs_2_theta(1:end,i)=0;
         
-        rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));    %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));     %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phis(1:end,i)=0;    %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phia(1:end,i)=0;     %%%%%%%%%%%%%%%%%%%%%%
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
        if p~=0
        rhs_1_w(3+1:end,i)=pol(1:p,i);
        rhs_2_theta(3+1:end,i)=pol(1:p,i);
-       rhs_2_phis(3+1:end,i)=H1*dpol(1:p,i);
-       rhs_2_phia(3+1:end,i)=H2*dpol(1:p,i);
        rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
        rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
        end
@@ -153,16 +151,14 @@ if i==1
         arhs_2_w(1:end,i)=0;
         arhs_2_theta(1:end,i)=0;
         
-        rhs_2_phis(1:3,i)=H1*dgdx(c,sub_dominio(:),x_dados(i));    %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(1:3,i)=H2*dgdx(c,sub_dominio(:),x_dados(i));     %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phis(1:end,i)=0;    %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phia(1:end,i)=0;     %%%%%%%%%%%%%%%%%%%%%%
         rhs_phiphis(1:3,i)=I_1*g(c,sub_dominio(:),x_dados(i));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         rhs_phiphia(1:3,i)=I_2*g(c,sub_dominio(:),x_dados(i));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         if p~=0
        rhs_1_w(3+1:end,i)=pol(1:p,i);
        rhs_2_theta(3+1:end,i)=pol(1:p,i);
-       rhs_2_phis(3+1:end,i)=H1*dpol(1:p,i);
-       rhs_2_phia(3+1:end,i)=H2*dpol(1:p,i);
        rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
        rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
         end
@@ -202,16 +198,16 @@ pesos_phiphia(i,:)=matriz_pesos\rhs_phiphia(:,i);         %%%%%%%%%%%%%%%%%%%%%%
         arhs_2_w(1:end,i)=0;
         arhs_2_theta(1:end,i)=0;
         
-        rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));    %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));     %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phis(1:3,i)=H1*g(c,x_dados(i),sub_dominio(:));    %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phia(1:3,i)=H2*g(c,x_dados(i),sub_dominio(:));     %%%%%%%%%%%%%%%%%%%%%%
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         if p~=0
        rhs_1_w(3+1:end,i)=pol(1:p,i);
        rhs_2_theta(3+1:end,i)=dpol(1:p,i);
-       rhs_2_phis(3+1:end,i)=H1*dpol(1:p,i);
-       rhs_2_phia(3+1:end,i)=H2*dpol(1:p,i);
+       rhs_2_phis(3+1:end,i)=H1*pol(1:p,i);
+       rhs_2_phia(3+1:end,i)=H2*pol(1:p,i);
        rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
        rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
        end
@@ -226,16 +222,14 @@ pesos_phiphia(i,:)=matriz_pesos\rhs_phiphia(:,i);         %%%%%%%%%%%%%%%%%%%%%%
         arhs_2_w(1:end,i)=0;
         arhs_2_theta(1:end,i)=0;
         
-        rhs_2_phis(1:3,i)=H1*dgdx(c,x_dados(i),sub_dominio(:));    %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(1:3,i)=H2*dgdx(c,x_dados(i),sub_dominio(:));     %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phis(1:end,i)=0;    %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phia(1:end,i)=0;     %%%%%%%%%%%%%%%%%%%%%%
         rhs_phiphis(1:3,i)=I_1*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         rhs_phiphia(1:3,i)=I_2*g(c,x_dados(i),sub_dominio(:));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        
         if p~=0
        rhs_1_w(3+1:end,i)=pol(1:p,i);
        rhs_2_theta(3+1:end,i)=pol(1:p,i);
-       rhs_2_phis(3+1:end,i)=H1*dpol(1:p,i);
-       rhs_2_phia(3+1:end,i)=H2*dpol(1:p,i);
        rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
        rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
        end
@@ -250,8 +244,8 @@ pesos_phiphia(i,:)=matriz_pesos\rhs_phiphia(:,i);         %%%%%%%%%%%%%%%%%%%%%%
         arhs_2_w(1:end,i)=0;
         arhs_2_theta(1:end,i)=0;
         
-        rhs_2_phis(1:3,i)=H1*dgdx(c,sub_dominio(:),x_dados(i));    %%%%%%%%%%%%%%%%%%%%%%
-        rhs_2_phia(1:3,i)=H2*dgdx(c,sub_dominio(:),x_dados(i));     %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phis(1:3,i)=H1*g(c,sub_dominio(:),x_dados(i));    %%%%%%%%%%%%%%%%%%%%%%
+        rhs_2_phia(1:3,i)=H2*g(c,sub_dominio(:),x_dados(i));     %%%%%%%%%%%%%%%%%%%%%%
         rhs_phiphis(1:3,i)=I_1*g(c,sub_dominio(:),x_dados(i));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         rhs_phiphia(1:3,i)=I_2*g(c,sub_dominio(:),x_dados(i));  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        
@@ -259,8 +253,8 @@ pesos_phiphia(i,:)=matriz_pesos\rhs_phiphia(:,i);         %%%%%%%%%%%%%%%%%%%%%%
        rhs_1_w(3+1:end,i)=dpol(1:p,i);
        rhs_1_theta(3+1:end,i)=pol(1:p,i);
        rhs_2_theta(3+1:end,i)=dpol(1:p,i);
-       rhs_2_phis(3+1:end,i)=H1*dpol(1:p,i);
-       rhs_2_phia(3+1:end,i)=H2*dpol(1:p,i);
+       rhs_2_phis(3+1:end,i)=H1*pol(1:p,i);
+       rhs_2_phia(3+1:end,i)=H2*pol(1:p,i);
        rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
        rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
        end
