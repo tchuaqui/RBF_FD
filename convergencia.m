@@ -1,7 +1,7 @@
 clear all
 nmax=100;
 p=3;   %nº de polinomios
-c=15;  %shape parameter c=0.5 for p=0, (c=1 for p=1 mau), (c=4 p=2 mt mau), c=1:20 for p=3
+c=1;  %shape parameter c=0.5 for p=0, (c=1 for p=1 mau), (c=4 p=2 mt mau), c=1:20 for p=3
 mode=3; %1st, 2nd or 3rd mode
 y=zeros(1,nmax-9); y_exacta=zeros(1,nmax-9);
 for i=10:nmax
