@@ -1,4 +1,4 @@
-function [ freq,freq_exacta ] = conv( n,p,c )  %cf, distribuicao quad ou lin do potencial, smart ou closed-circuit
+function [ freq,freq_exacta ] = conv( n,p,c,mode )  %cf, distribuicao quad ou lin do potencial, smart ou closed-circuit
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
@@ -452,7 +452,7 @@ m=1; E=6e10; I=I2(1)+I2(2); A=h; G=2.3e10;
 sol_exacta=(m*pi/L)^2*sqrt((E*I)/(rho*A))*sqrt(1-(((m*pi/L)^2*E*I)/(k*G*A+(m*pi/L)^2*E*I)));
 sol_exacta_norm=sol_exacta*L^2*sqrt(rho*A/(E*I));
 
-p=1;
+p=mode;
 lambda_mode_w(1:n,p)=lambda_vec(1:n,p);
 lambda_mode_phi_x(1:n,p)=lambda_vec(n+1:end,p);
 lambda_mode=[lambda_mode_w;lambda_mode_phi_x];
