@@ -3,7 +3,7 @@ x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
 n=100;       % nº de nos
-p=1;    %nº de polinomios
+p=3;    %nº de polinomios
 c=1;     %shape parameter
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
@@ -329,10 +329,10 @@ elseif  i==numel(x_dados)
         end
         case {'cl'}
         rhs_1_u(1:3,i)=B11*dgdx(c,x_dados(i),sub_dominio(:));  
-% rhs_1_u(:,i)=g(c,x_dados(i),sub_dominio(:));
+% rhs_1_u(1:3,i)=g(c,x_dados(i),sub_dominio(:));
         rhs_1_w(1:end,i)=0;
         rhs_1_theta(1:3,i)=(C11+E)*dgdx(c,x_dados(i),sub_dominio(:));
-% rhs_1_theta(:,i)=0;
+% rhs_1_theta(1:end,i)=0;
  
         rhs_2_u(1:end,i)=0;
         rhs_2_w(1:3,i)=B55*dgdx(c,x_dados(i),sub_dominio(:));
@@ -360,6 +360,7 @@ elseif  i==numel(x_dados)
         
         if p~=0
         rhs_1_u(3+1:end,i)=B11*dpol(1:p,i);
+% rhs_1_u(3+1:end,i)=pol(1:p,i);
         rhs_1_theta(3+1:end,i)=(C11+E)*dpol(1:p,i);
         rhs_2_w(3+1:end,i)=B55*dpol(1:p,i);
         rhs_2_theta(3+1:end,i)=B55*pol(1:p,i);
@@ -590,16 +591,12 @@ K_phiphis(n,n-2:n)=pesos_phiphis(n,3:-1:1);
 K_phiphia(1,1:3)=pesos_phiphia(1,1:3);    
 K_phiphia(n,n-2:n)=pesos_phiphia(n,3:-1:1); 
 
-%% SMART BEAM
-L_total(1:n,1:n)=L_total(1:n,1:n)+K_uphis*(K_phiphis^-1)*K_uphis;   
-L_total(1:n,2*n+1:3*n)=L_total(1:n,2*n+1:3*n)+K_uphis*(K_phiphis^-1)*K_tphis;   
-L_total(2*n+1:3*n,1:n)=L_total(2*n+1:3*n,1:n)+K_tphis*(K_phiphis^-1)*K_uphis;   
-L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)+K_tphis*(K_phiphis^-1)*K_tphis; 
-%% CLOSED CIRCUIT 0V
-%%
 
-L_total(1,1:end)=0; L_total(n,1:end)=0; L_total(n+1,1:end)=0; L_total(2*n,1:end)=0;   
-L_total(2*n+1,1:end)=0; L_total(3*n,1:end)=0; 
+%%
+% 
+% L_total(1,1:end)=0; L_total(n,1:end)=0; L_total(n+1,1:end)=0; L_total(2*n,1:end)=0;   
+% L_total(2*n+1,1:end)=0; L_total(3*n,1:end)=0; 
+
 L_total(1,1:3)=pesos_1_u(1,1:3);
 L_total(n,n-2:n)=pesos_1_u(n,3:-1:1);
 L_total(1,n+1:n+3)=pesos_1_w(1,1:3);
@@ -639,6 +636,13 @@ A_total(end,2*n-2:2*n)=apesos_3_w(n,3:-1:1);
 A_total(2*n+1,2*n+1:2*n+3)=apesos_3_theta(1,1:3);
 A_total(end,end-2:end)=apesos_3_theta(n,3:-1:1);
 
+%% SMART BEAM
+L_total(1:n,1:n)=L_total(1:n,1:n)+K_uphis*(K_phiphis^-1)*K_uphis;   
+L_total(1:n,2*n+1:3*n)=L_total(1:n,2*n+1:3*n)+K_uphis*(K_phiphis^-1)*K_tphis;   
+L_total(2*n+1:3*n,1:n)=L_total(2*n+1:3*n,1:n)+K_tphis*(K_phiphis^-1)*K_uphis;   
+L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)+K_tphis*(K_phiphis^-1)*K_tphis; 
+%% CLOSED CIRCUIT 0V
+
 %% EIGENVALUE PROBLEM
 [lambda_vec,lambda]=eig(L_total,A_total);
 [V,D]=eig(L_total,A_total,'qz');SS5=L_total*V-A_total*V*D;
@@ -666,7 +670,7 @@ subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str
 
 %% NEWMARK
 % Gv=0.0001;
-Gv=0.00001;
+Gv=0.00000001;
 
 C_uu=K_uphia*(K_phiphis^-1)*K_uphis;
 C_ut=K_uphia*(K_phiphis^-1)*K_tphis;
