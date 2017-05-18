@@ -418,9 +418,9 @@ else
         rhs_3_w(1:3,i)=-B55*dgdx(c,x_dados(i),sub_dominio(:));
         rhs_3_theta(1:3,i)=(D11+G)*d2gdx2(c,x_dados(i),sub_dominio(:))-B55*g(c,x_dados(i),sub_dominio(:));
         
-        arhs_1_u(1:3,i)=-J0*g(c,x_dados(i),sub_dominio(:));
+        arhs_1_u(1:3,i)=-J0*g(c,x_dados(i),sub_dominio(:));                                           
         arhs_1_w(1:end,i)=0;
-        arhs_1_theta(1:3,i)=-J1*g(c,x_dados(i),sub_dominio(:));
+        arhs_1_theta(1:3,i)=-J1*g(c,x_dados(i),sub_dominio(:));     
         arhs_2_u(1:end,i)=0;
         arhs_2_w(1:3,i)=-J0*g(c,x_dados(i),sub_dominio(:));
         arhs_2_theta(1:end,i)=0;
@@ -449,8 +449,8 @@ else
         rhs_3_phia(3+1:end,i)=H2*dpol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
         rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
-        arhs_1_u(3+1:end,i)=-J0*pol(1:p,i);
-        arhs_1_theta(3+1:end,i)=-J1*pol(1:p,i);
+         arhs_1_u(3+1:end,i)=-J0*pol(1:p,i);   
+         arhs_1_theta(3+1:end,i)=-J1*pol(1:p,i);  
         arhs_2_w(3+1:end,i)=-J0*pol(1:p,i);
         arhs_3_u(3+1:end,i)=-J1*pol(1:p,i);
         arhs_3_theta(3+1:end,i)=-J2*pol(1:p,i);
