@@ -4,7 +4,7 @@ L=x_final-x_inicial;
 cfstr='cl';
 n=100;       % nº de nos
 p=3;    %nº de polinomios
-c=1;     %shape parameter
+c=10;     %shape parameter
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
 x_central=find(x_dados==0.5);
@@ -103,7 +103,7 @@ if i==1
         rhs_2_w(1:3,i)=g(c,x_dados(i),sub_dominio(:));
         rhs_2_theta(1:end,i)=0;
         rhs_3_w(1:end,i)=0;
-        rhs_3_theta(1:3,i)=(D11+G)*dgdx(c,x_dados(i),sub_dominio(:));
+        rhs_3_theta(1:3,i)=(D11+G-(1/B11)*(C11+E)^2)*dgdx(c,x_dados(i),sub_dominio(:));
 
         arhs_2_w(1:end,i)=0;
         arhs_2_theta(1:end,i)=0;
@@ -117,14 +117,13 @@ if i==1
         
         if p~=0
         rhs_2_w(3+1:end,i)=pol(1:p,i);
-        rhs_3_theta(3+1:end,i)=(D11+G)*dpol(1:p,i);
+        rhs_3_theta(3+1:end,i)=(D11+G-(1/B11)*(C11+E)^2)*dpol(1:p,i);
         rhs_3_phis(3+1:end,i)=H1*pol(1:p,i);
         rhs_3_phia(3+1:end,i)=H2*pol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
         rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
         end
             case {'cc'}
-        rhs_1_w(1:end,i)=0;
         rhs_2_w(1:3,i)=g(c,x_dados(i),sub_dominio(:));
         rhs_2_theta(1:end,i)=0;   
         rhs_3_w(1:end,i)=0;
@@ -195,7 +194,7 @@ elseif  i==numel(x_dados)
         rhs_2_w(1:3,i)=g(c,x_dados(i),sub_dominio(:));
         rhs_2_theta(1:end,i)=0;
         rhs_3_w(1:end,i)=0;
-        rhs_3_theta(1:3,i)=(D11+G)*dgdx(c,x_dados(i),sub_dominio(:));
+        rhs_3_theta(1:3,i)=(D11+G-(1/B11)*(C11+E)^2)*dgdx(c,x_dados(i),sub_dominio(:));
         
         arhs_2_w(1:end,i)=0;
         arhs_2_theta(1:end,i)=0;
@@ -209,7 +208,7 @@ elseif  i==numel(x_dados)
         
         if p~=0
         rhs_2_w(3+1:end,i)=pol(1:p,i);
-        rhs_3_theta(3+1:end,i)=(D11+G)*dpol(1:p,i);
+        rhs_3_theta(3+1:end,i)=(D11+G-(1/B11)*(C11+E)^2)*dpol(1:p,i);
         rhs_3_phis(3+1:end,i)=H1*pol(1:p,i);
         rhs_3_phia(3+1:end,i)=H2*pol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
@@ -241,7 +240,7 @@ elseif  i==numel(x_dados)
         rhs_2_w(1:3,i)=B55*dgdx(c,x_dados(i),sub_dominio(:));
         rhs_2_theta(1:3,i)=B55*g(c,x_dados(i),sub_dominio(:));
         rhs_3_w(1:end,i)=0;
-        rhs_3_theta(1:3,i)=(D11+G)*dgdx(c,x_dados(i),sub_dominio(:));
+        rhs_3_theta(1:3,i)=(D11+G-(1/B11)*(C11+E)^2)*dgdx(c,x_dados(i),sub_dominio(:));
         
         arhs_2_w(1:end,i)=0;
         arhs_2_theta(1:end,i)=0;
@@ -256,7 +255,7 @@ elseif  i==numel(x_dados)
         if p~=0
         rhs_2_w(3+1:end,i)=B55*dpol(1:p,i);
         rhs_2_theta(3+1:end,i)=B55*pol(1:p,i);
-        rhs_3_theta(3+1:end,i)=(D11+G)*dpol(1:p,i);
+        rhs_3_theta(3+1:end,i)=(D11+G-(1/B11)*(C11+E)^2)*dpol(1:p,i);
         rhs_3_phis(3+1:end,i)=H1*pol(1:p,i);
         rhs_3_phia(3+1:end,i)=H2*pol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
@@ -288,7 +287,7 @@ else
         rhs_2_w(1:3,i)=B55*d2gdx2(c,x_dados(i),sub_dominio(:));
         rhs_2_theta(1:3,i)=B55*dgdx(c,x_dados(i),sub_dominio(:));
         rhs_3_w(1:3,i)=-B55*dgdx(c,x_dados(i),sub_dominio(:));
-        rhs_3_theta(1:3,i)=(D11+G)*d2gdx2(c,x_dados(i),sub_dominio(:))-B55*g(c,x_dados(i),sub_dominio(:));
+        rhs_3_theta(1:3,i)=(D11+G-(1/B11)*(C11+E)^2)*d2gdx2(c,x_dados(i),sub_dominio(:))-B55*g(c,x_dados(i),sub_dominio(:));
         
         arhs_2_w(1:3,i)=-J0*g(c,x_dados(i),sub_dominio(:));
         arhs_2_theta(1:end,i)=0;
@@ -304,7 +303,7 @@ else
         rhs_2_w(3+1:end,i)=B55*d2pol(1:p,i);
         rhs_2_theta(3+1:end,i)=B55*dpol(1:p,i);
         rhs_3_w(3+1:end,i)=-B55*dpol(1:p,i);
-        rhs_3_theta(3+1:end,i)=(D11+G)*d2pol(1:p,i)-B55*pol(1:p,i);
+        rhs_3_theta(3+1:end,i)=(D11+G-(1/B11)*(C11+E)^2)*d2pol(1:p,i)-B55*pol(1:p,i);
         rhs_3_phis(3+1:end,i)=H1*dpol(1:p,i);
         rhs_3_phia(3+1:end,i)=H2*dpol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
@@ -339,154 +338,96 @@ end
 L_total=zeros(2*n,2*n);
 A_total=zeros(2*n,2*n);
 
-K_uphis=zeros(n,n);
-K_uphia=zeros(n,n);
-K_tphis=zeros(n,n);
-K_tphia=zeros(n,n);
-K_phiphis=zeros(n,n);
-K_phiphia=zeros(n,n);
+% K_tphis=zeros(n,n);   %%%%%%%%%%%%%%%%%%%%%%
+% K_tphia=zeros(n,n);   %%%%%%%%%%%%%%%%%%%%%%
+% K_phiphis=zeros(n,n);  %%%%%%%%%%%%%%%%%%%%%%%%
+% K_phiphia=zeros(n,n);  %%%%%%%%%%%%%%%%%%%%%%%%%%%
 for i=2:n-1
-    for j=i                
-L_total(i,j-1)=pesos_1_u(i,2);        
-L_total(i,j)=pesos_1_u(i,1);
-L_total(i,j+1)=pesos_1_u(i,3);
-L_total(i,n+j-1)=pesos_1_w(i,2);
-L_total(i,n+j)=pesos_1_w(i,1);
-L_total(i,n+j+1)=pesos_1_w(i,3);
-L_total(i,2*n+j-1)=pesos_1_theta(i,2);
-L_total(i,2*n+j)=pesos_1_theta(i,1);
-L_total(i,2*n+j+1)=pesos_1_theta(i,3);
-L_total(n+i,j-1)=pesos_2_u(i,2);
-L_total(n+i,j)=pesos_2_u(i,1);
-L_total(n+i,j+1)=pesos_2_u(i,3);
-L_total(n+i,n+j-1)=pesos_2_w(i,2);
-L_total(n+i,n+j)=pesos_2_w(i,1);
-L_total(n+i,n+j+1)=pesos_2_w(i,3);
-L_total(n+i,2*n+j-1)=pesos_2_theta(i,2);
-L_total(n+i,2*n+j)=pesos_2_theta(i,1);
-L_total(n+i,2*n+j+1)=pesos_2_theta(i,3);
-L_total(2*n+i,j-1)=pesos_3_u(i,2);
-L_total(2*n+i,j)=pesos_3_u(i,1);
-L_total(2*n+i,j+1)=pesos_3_u(i,3);
-L_total(2*n+i,n+j-1)=pesos_3_w(i,2);
-L_total(2*n+i,n+j)=pesos_3_w(i,1);
-L_total(2*n+i,n+j+1)=pesos_3_w(i,3);
-L_total(2*n+i,2*n+j-1)=pesos_3_theta(i,2);
-L_total(2*n+i,2*n+j)=pesos_3_theta(i,1);
-L_total(2*n+i,2*n+j+1)=pesos_3_theta(i,3);
+    for j=i
+L_total(i,j-1)=pesos_2_w(i,2);        
+L_total(i,j)=pesos_2_w(i,1);
+L_total(i,j+1)=pesos_2_w(i,3);
 
-A_total(i,j-1)=apesos_1_u(i,2);        
-A_total(i,j)=apesos_1_u(i,1);
-A_total(i,j+1)=apesos_1_u(i,3);
-A_total(i,n+j-1)=apesos_1_w(i,2);
-A_total(i,n+j)=apesos_1_w(i,1);
-A_total(i,n+j+1)=apesos_1_w(i,3);
-A_total(i,2*n+j-1)=apesos_1_theta(i,2);
-A_total(i,2*n+j)=apesos_1_theta(i,1);
-A_total(i,2*n+j+1)=apesos_1_theta(i,3);
-A_total(n+i,j-1)=apesos_2_u(i,2);
-A_total(n+i,j)=apesos_2_u(i,1);
-A_total(n+i,j+1)=apesos_2_u(i,3);
-A_total(n+i,n+j-1)=apesos_2_w(i,2);
-A_total(n+i,n+j)=apesos_2_w(i,1);
-A_total(n+i,n+j+1)=apesos_2_w(i,3);
-A_total(n+i,2*n+j-1)=apesos_2_theta(i,2);
-A_total(n+i,2*n+j)=apesos_2_theta(i,1);
-A_total(n+i,2*n+j+1)=apesos_2_theta(i,3);
-A_total(2*n+i,j-1)=apesos_3_u(i,2);
-A_total(2*n+i,j)=apesos_3_u(i,1);
-A_total(2*n+i,j+1)=apesos_3_u(i,3);
-A_total(2*n+i,n+j-1)=apesos_3_w(i,2);
-A_total(2*n+i,n+j)=apesos_3_w(i,1);
-A_total(2*n+i,n+j+1)=apesos_3_w(i,3);
-A_total(2*n+i,2*n+j-1)=apesos_3_theta(i,2);
-A_total(2*n+i,2*n+j)=apesos_3_theta(i,1);
-A_total(2*n+i,2*n+j+1)=apesos_3_theta(i,3);
+L_total(i,n+j-1)=pesos_2_theta(i,2);
+L_total(i,n+j)=pesos_2_theta(i,1);
+L_total(i,n+j+1)=pesos_2_theta(i,3);
 
-K_uphis(i,j-1)=pesos_1_phis(i,2);   
-K_uphis(i,j)=pesos_1_phis(i,1);      
-K_uphis(i,j+1)=pesos_1_phis(i,3);   
-K_uphia(i,j-1)=pesos_1_phia(i,2);    
-K_uphia(i,j)=pesos_1_phia(i,1);     
-K_uphia(i,j+1)=pesos_1_phia(i,3);    
-K_tphis(i,j-1)=pesos_3_phis(i,2);    
-K_tphis(i,j)=pesos_3_phis(i,1);      
-K_tphis(i,j+1)=pesos_3_phis(i,3);    
-K_tphia(i,j-1)=pesos_3_phia(i,2);   
-K_tphia(i,j)=pesos_3_phia(i,1);      
-K_tphia(i,j+1)=pesos_3_phia(i,3);    
-K_phiphis(i,j-1)=pesos_phiphis(i,2);    
-K_phiphis(i,j)=pesos_phiphis(i,1);      
-K_phiphis(i,j+1)=pesos_phiphis(i,3);    
-K_phiphia(i,j-1)=pesos_phiphia(i,2);    
-K_phiphia(i,j)=pesos_phiphia(i,1);      
-K_phiphia(i,j+1)=pesos_phiphia(i,3);    
+L_total(n+i,j-1)=pesos_3_w(i,2);
+L_total(n+i,j)=pesos_3_w(i,1);
+L_total(n+i,j+1)=pesos_3_w(i,3);
+
+L_total(n+i,n+j-1)=pesos_3_theta(i,2);
+L_total(n+i,n+j)=pesos_3_theta(i,1);
+L_total(n+i,n+j+1)=pesos_3_theta(i,3);
+
+% K_tphis(i,j-1)=pesos_3_phis(i,2);  %%%%%%%%%%%%%%%%%%%%
+% K_tphis(i,j)=pesos_3_phis(i,1);    %%%%%%%%%%%%%%%%%%%
+% K_tphis(i,j+1)=pesos_3_phis(i,3);  %%%%%%%%%%%%%%%%%%%%
+% 
+% K_tphia(i,j-1)=pesos_3_phia(i,2);   %%%%%%%%%%%%%%%%%%%%%%%%
+% K_tphia(i,j)=pesos_3_phia(i,1);    %%%%%%%%%%%%%%%%%%%%%%%%%
+% K_tphia(i,j+1)=pesos_3_phia(i,3);  %%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% K_phiphis(i,j-1)=pesos_phiphis(i,2);   %%%%%%%%%%%%%%%%%%%%%%%%
+% K_phiphis(i,j)=pesos_phiphis(i,1);    %%%%%%%%%%%%%%%%%%%%%%%%%
+% K_phiphis(i,j+1)=pesos_phiphis(i,3);  %%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% K_phiphia(i,j-1)=pesos_phiphia(i,2);   %%%%%%%%%%%%%%%%%%%%%%%%
+% K_phiphia(i,j)=pesos_phiphia(i,1);    %%%%%%%%%%%%%%%%%%%%%%%%%
+% K_phiphia(i,j+1)=pesos_phiphia(i,3);  %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+A_total(i,j-1)=apesos_2_w(i,2);        
+A_total(i,j)=apesos_2_w(i,1);
+A_total(i,j+1)=apesos_2_w(i,3);
+
+A_total(i,n+j-1)=apesos_2_theta(i,2);
+A_total(i,n+j)=apesos_2_theta(i,1);
+A_total(i,n+j+1)=apesos_2_theta(i,3);
+
+A_total(n+i,j-1)=apesos_3_w(i,2);
+A_total(n+i,j)=apesos_3_w(i,1);
+A_total(n+i,j+1)=apesos_3_w(i,3);
+
+A_total(n+i,n+j-1)=apesos_3_theta(i,2);
+A_total(n+i,n+j)=apesos_3_theta(i,1);
+A_total(n+i,n+j+1)=apesos_3_theta(i,3);
+
     end
 end
-K_uphis(1,1:3)=pesos_1_phis(1,1:3);    
-K_uphis(n,n-2:n)=pesos_1_phis(n,3:-1:1); 
-K_uphia(1,1:3)=pesos_1_phia(1,1:3);    
-K_uphia(n,n-2:n)=pesos_1_phia(n,3:-1:1); 
-K_tphis(1,1:3)=pesos_3_phis(1,1:3);    
-K_tphis(n,n-2:n)=pesos_3_phis(n,3:-1:1); 
-K_tphia(1,1:3)=pesos_3_phia(1,1:3);    
-K_tphia(n,n-2:n)=pesos_3_phia(n,3:-1:1); 
-K_phiphis(1,1:3)=pesos_phiphis(1,1:3);    
-K_phiphis(n,n-2:n)=pesos_phiphis(n,3:-1:1); 
-K_phiphia(1,1:3)=pesos_phiphia(1,1:3);    
-K_phiphia(n,n-2:n)=pesos_phiphia(n,3:-1:1); 
 
+% K_tphis(1,1:3)=pesos_3_phis(1,1:3);    %%%%%%%%%%%%%%%%%%%%%%%%
+% K_tphis(n,n-2:n)=pesos_3_phis(n,3:-1:1); %%%%%%%%%%%%%%%%%%%%%
+% 
+% K_tphia(1,1:3)=pesos_3_phia(1,1:3);   %%%%%%%%%%%%%%%%%%%%%%%%%%
+% K_tphia(n,n-2:n)=pesos_3_phia(n,3:-1:1);  %%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% K_phiphis(1,1:3)=pesos_phiphis(1,1:3);   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% K_phiphis(n,n-2:n)=pesos_phiphis(n,3:-1:1);  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  
+% K_phiphia(1,1:3)=pesos_phiphia(1,1:3);   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% K_phiphia(n,n-2:n)=pesos_phiphia(n,3:-1:1);   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%
 % 
-% L_total(1,1:end)=0; L_total(n,1:end)=0; L_total(n+1,1:end)=0; L_total(2*n,1:end)=0;   
-% L_total(2*n+1,1:end)=0; L_total(3*n,1:end)=0; 
+% L_total(1,1:end)=0; L_total(n,1:end)=0; L_total(n+1,1:end)=0; L_total(end,1:end)=0;
 
-L_total(1,1:3)=pesos_1_u(1,1:3);
-L_total(n,n-2:n)=pesos_1_u(n,3:-1:1);
-L_total(1,n+1:n+3)=pesos_1_w(1,1:3);
-L_total(n,2*n-2:2*n)=pesos_1_w(n,3:-1:1);
-L_total(1,2*n+1:2*n+3)=pesos_1_theta(1,1:3);
-L_total(n,end-2:end)=pesos_1_theta(n,3:-1:1);
-L_total(n+1,1:3)=pesos_2_u(1,1:3);
-L_total(2*n,n-2:n)=pesos_2_u(n,3:-1:1);
-L_total(n+1,n+1:n+3)=pesos_2_w(1,1:3);
-L_total(2*n,2*n-2:2*n)=pesos_2_w(n,3:-1:1);
-L_total(n+1,2*n+1:2*n+3)=pesos_2_theta(1,1:3);
-L_total(2*n,end-2:end)=pesos_2_theta(n,3:-1:1);
-L_total(2*n+1,1:3)=pesos_3_u(1,1:3);
-L_total(end,n-2:n)=pesos_3_u(n,3:-1:1);
-L_total(2*n+1,n+1:n+3)=pesos_3_w(1,1:3);
-L_total(end,2*n-2:2*n)=pesos_3_w(n,3:-1:1);
-L_total(2*n+1,2*n+1:2*n+3)=pesos_3_theta(1,1:3);
+L_total(1,1:3)=pesos_2_w(1,1:3); 
+L_total(n,n-2:n)=pesos_2_w(n,3:-1:1);
+L_total(1,n+1:n+3)=pesos_2_theta(1,1:3);
+L_total(n,end-2:end)=pesos_2_theta(n,3:-1:1);
+L_total(n+1,1:3)=pesos_3_w(1,1:3);
+L_total(end,n-2:n)=pesos_3_w(n,3:-1:1);
+L_total(n+1,n+1:n+3)=pesos_3_theta(1,1:3);
 L_total(end,end-2:end)=pesos_3_theta(n,3:-1:1);
 
-
-A_total(1,1:3)=apesos_1_u(1,1:3);
-A_total(n,n-2:n)=apesos_1_u(n,3:-1:1);
-A_total(1,n+1:n+3)=apesos_1_w(1,1:3);
-A_total(n,2*n-2:2*n)=apesos_1_w(n,3:-1:1);
-A_total(1,2*n+1:2*n+3)=apesos_1_theta(1,1:3);
-A_total(n,end-2:end)=apesos_1_theta(n,3:-1:1);
-A_total(n+1,1:3)=apesos_2_u(1,1:3);
-A_total(2*n,n-2:n)=apesos_2_u(n,3:-1:1);
-A_total(n+1,n+1:n+3)=apesos_2_w(1,1:3);
-A_total(2*n,2*n-2:2*n)=apesos_2_w(n,3:-1:1);
-A_total(n+1,2*n+1:2*n+3)=apesos_2_theta(1,1:3);
-A_total(2*n,end-2:end)=apesos_2_theta(n,3:-1:1);
-A_total(2*n+1,1:3)=apesos_3_u(1,1:3);
-A_total(end,n-2:n)=apesos_3_u(n,3:-1:1);
-A_total(2*n+1,n+1:n+3)=apesos_3_w(1,1:3);
-A_total(end,2*n-2:2*n)=apesos_3_w(n,3:-1:1);
-A_total(2*n+1,2*n+1:2*n+3)=apesos_3_theta(1,1:3);
+A_total(1,1:3)=apesos_2_w(1,1:3);
+A_total(n,n-2:n)=apesos_2_w(n,3:-1:1);
+A_total(1,n+1:n+3)=apesos_2_theta(1,1:3);
+A_total(n,end-2:end)=apesos_2_theta(n,3:-1:1);
+A_total(n+1,1:3)=apesos_3_w(1,1:3);
+A_total(end,n-2:n)=apesos_3_w(n,3:-1:1);
+A_total(n+1,n+1:n+3)=apesos_3_theta(1,1:3);
 A_total(end,end-2:end)=apesos_3_theta(n,3:-1:1);
-
-%% SMART BEAM
-L_total(1:n,1:n)=L_total(1:n,1:n)+K_uphis*(K_phiphis^-1)*K_uphis;   
-L_total(1:n,2*n+1:3*n)=L_total(1:n,2*n+1:3*n)+K_uphis*(K_phiphis^-1)*K_tphis;   
-L_total(2*n+1:3*n,1:n)=L_total(2*n+1:3*n,1:n)+K_tphis*(K_phiphis^-1)*K_uphis;   
-L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)+K_tphis*(K_phiphis^-1)*K_tphis; 
-%% CLOSED CIRCUIT 0V
 
 %% EIGENVALUE PROBLEM
 [lambda_vec,lambda]=eig(L_total,A_total);
@@ -505,86 +446,10 @@ sol_exacta=(m*pi/L)^2*sqrt((E*I)/(rho*A))*sqrt(1-(((m*pi/L)^2*E*I)/(k*G*A+(m*pi/
 sol_exacta_norm=sol_exacta*L^2*sqrt(rho*A/(E*I));
 
 p=1;
-lambda_mode_w(1:n,p)=lambda_vec(n+1:2*n,p);
-lambda_mode_phi_x(1:n,p)=lambda_vec(2*n+1:end,p);
+lambda_mode_w(1:n,p)=lambda_vec(1:n,p);
+lambda_mode_phi_x(1:n,p)=lambda_vec(n+1:2*n,p);
 lambda_mode=[lambda_mode_w;lambda_mode_phi_x];
 
 figure(1)
 subplot(1,3,1);plot(x_dados, lambda_mode_w(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(sqrt(lambda(p))/(2*pi),'%6.4f')])
 subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(sqrt(lambda(p))/(2*pi),'%6.4f')])
-
-%% NEWMARK
-% Gv=0.0001;
-Gv=0.00000001;
-
-C_uu=K_uphia*(K_phiphis^-1)*K_uphis;
-C_ut=K_uphia*(K_phiphis^-1)*K_tphis;
-C_tu=K_tphia*(K_phiphis^-1)*K_uphis;
-C_tt=K_tphia*(K_phiphis^-1)*K_tphis;
-C_total=zeros(3*n,3*n);
-C_total(1:n,1:n)=-C_uu;   %estava positivo, com negativo funciona!
-C_total(1:n,2*n+1:3*n)=C_ut;
-C_total(2*n+1:3*n,1:n)=C_tu;
-C_total(2*n+1:3*n,2*n+1:3*n)=C_tt;
-C_total(1,1:end)=0; C_total(n,1:end)=0; C_total(2*n+1,1:end)=0; C_total(3*n,1:end)=0;
-C_total=-Gv*C_total;
-
-%cond. iniciais 
-vetor_carga=zeros(3*n,1);
-vetor_carga(n+1:2*n-1)=carga;
-solucao_estatica=L_total\vetor_carga; 
-x_0=solucao_estatica; v_0=zeros(3*n,1);
-vetor_f=zeros(3*n,1);   %caso se queira impôr força inicial ao inves de deslocamento inicial
-a_0=pinv(A_total)*(vetor_f-C_total*v_0-L_total*x_0);
-delta=1/2; alpha=1/4;
-% delta_t=1/(freq*200);   %delta t
-delta_t=1/100000;
-a0=1/(alpha*delta_t^2); a1=delta/(alpha*delta_t); a2=1/(alpha*delta_t); a3=1/(2*alpha)-1;
-a4=delta/alpha-1; a5=(delta_t/2)*(delta/alpha-2); a6=delta_t*(1-delta); a7=delta*delta_t;
-
-%rigidez efetiva
-K_efe=L_total+a0*A_total+a1*C_total;
-
-% t_final=10/freq;   % t final
-t_final=0.02;
-n_t=int64(t_final/delta_t+1);
-t=zeros(n_t,1);
-x_t=zeros(3*n,n_t); x_t(:,1)=x_0;
-v_t=zeros(3*n,n_t); v_t(:,1)=v_0;
-a_t=zeros(3*n,n_t); a_t(:,1)=a_0;
-for i=2:n_t
-  t(i)=t(i-1)+delta_t;
-  F_efe=A_total*(a0*x_t(:,i-1)+a2*v_t(:,i-1)+a3*a_t(:,i-1))+C_total*(a1*x_t(:,i-1)+a4*v_t(:,i-1)+a5*a_t(:,i-1));
-  x_t(:,i)=K_efe\F_efe;
-  a_t(:,i)=a0*(x_t(:,i)-x_t(:,i-1))-a2*v_t(:,i-1)-a3*a_t(:,i-1);
-  v_t(:,i)=v_t(:,i-1)+a6*a_t(:,i-1)+a7*a_t(:,i);
-end
-switch cfstr
-    case {'cc'}
-      x_max=x_t(n+ceil(n/2),:);  
-    case {'ss'}
-      x_max=x_t(n+ceil(n/2),:);  
-    case{'cl'}  
-      x_max=x_t(2*n,:);
-end
-figure(2)
-plot(t,x_max);      
-hold on
-
-%%
-X=fft(x_max);
-X_mag=abs(X(1:ceil(n_t/2)));
-[pk_vals, pk_locs]=findpeaks(X_mag);
-%remove peaks below threshold
-% inds=find(X_mag(pk_locs)<1);
-% pk_locs(inds)=[];
-
-%determine frequencies
-pk_freqs=zeros(length(pk_locs),1);
-for i=1:length(pk_locs)
-pk_freqs(i)=(pk_locs(i)-1)/t_final;
-end
-
-figure(3)
-plot(X_mag);
-hold on
