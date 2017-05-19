@@ -693,7 +693,7 @@ vetor_f=zeros(3*n,1);   %caso se queira impôr força inicial ao inves de deslocam
 a_0=pinv(A_total)*(vetor_f-C_total*v_0-L_total*x_0);
 delta=1/2; alpha=1/4;
 % delta_t=1/(freq*200);   %delta t
-delta_t=1/100000;
+delta_t=1/10000;
 a0=1/(alpha*delta_t^2); a1=delta/(alpha*delta_t); a2=1/(alpha*delta_t); a3=1/(2*alpha)-1;
 a4=delta/alpha-1; a5=(delta_t/2)*(delta/alpha-2); a6=delta_t*(1-delta); a7=delta*delta_t;
 
@@ -743,3 +743,10 @@ end
 figure(3)
 plot(X_mag);
 hold on
+
+
+%%
+
+fID = fopen('3GBL_x0.txt','w');
+fprintf(fID,'\t %25.15f\r\n', x_0);
+fclose(fID);
