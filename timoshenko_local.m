@@ -2,7 +2,7 @@ clear all
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
-n=100;       % nº de nos
+n=5;       % nº de nos
 p=3;    %nº de polinomios
 c=5;     %shape parameter
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
@@ -407,8 +407,8 @@ K_phiphia(1,1:3)=pesos_phiphia(1,1:3);   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 K_phiphia(n,n-2:n)=pesos_phiphia(n,3:-1:1);   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % L_TOTAL FINAL (PODE SER SMART, CLOSE CIRCUIT)
-% L_total(n+1:2*n,n+1:2*n)=L_total(n+1:2*n,n+1:2*n)+K_tphis*(K_phiphis^-1)*K_tphis;   %SMART (1 SENSOR E 1 ATUADOR)
-L_total(n+1:2*n,n+1:2*n)=L_total(n+1:2*n,n+1:2*n);                                  %CLOSED-CIRCUIT 0V
+L_total(n+1:2*n,n+1:2*n)=L_total(n+1:2*n,n+1:2*n)+K_tphis*(K_phiphis^-1)*K_tphis;   %SMART (1 SENSOR E 1 ATUADOR)
+% L_total(n+1:2*n,n+1:2*n)=L_total(n+1:2*n,n+1:2*n);                                  %CLOSED-CIRCUIT 0V
 
 
 % TERMOS DE FRONTEIRA
@@ -456,7 +456,7 @@ m=1; E=6e10; I=I2(1)+I2(2); A=h; G=2.3e10;
 sol_exacta=(m*pi/L)^2*sqrt((E*I)/(rho*A))*sqrt(1-(((m*pi/L)^2*E*I)/(k*G*A+(m*pi/L)^2*E*I)));
 sol_exacta_norm=sol_exacta*L^2*sqrt(rho*A/(E*I));
 
-pp=3;
+pp=1;
 lambda_mode_w(1:n,pp)=lambda_vec(1:n,pp);
 lambda_mode_phi_x(1:n,pp)=lambda_vec(n+1:end,pp);
 lambda_mode=[lambda_mode_w;lambda_mode_phi_x];
@@ -467,8 +467,8 @@ subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,pp));hold on;title(['w(' num2st
 
 %%
 %----NEWMARK  (TEM DE SER COM SMART)
-Gv=0.0001;
-% Gv=0;
+% Gv=0.0001;
+Gv=0.0000001;
 
 C_tt=K_tphia*(K_phiphis^-1)*K_tphis;
 C_total=zeros(2*n,2*n);
