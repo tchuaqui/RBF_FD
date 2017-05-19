@@ -2,9 +2,9 @@ clear all
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
-n=5;       % nº de nos
+n=100;       % nº de nos
 p=3;    %nº de polinomios
-c=5;     %shape parameter
+c=1;     %shape parameter
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
 x_central=find(x_dados==0.5);
@@ -540,3 +540,8 @@ end
 figure(3)
 plot(X_mag);
 hold on
+
+%%
+fID = fopen('2GBL_x0.txt','w');
+fprintf(fID,'\t %25.15f\r\n', x_0);
+fclose(fID);
