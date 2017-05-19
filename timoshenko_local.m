@@ -2,7 +2,7 @@ clear all
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
-n=100;       % nº de nos
+n=10;       % nº de nos
 p=3;    %nº de polinomios
 c=1;     %shape parameter
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
