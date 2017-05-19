@@ -2,7 +2,7 @@ clear all
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
-n=5;       % nº de nos
+n=100;       % nº de nos
 p=3;    %nº de polinomios
 c=1;     %shape parameter
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
@@ -335,11 +335,11 @@ elseif  i==numel(x_dados)
 % rhs_1_theta(1:end,i)=0;
  
         rhs_2_u(1:end,i)=0;
-        rhs_2_w(1:3,i)=B55*dgdx(c,x_dados(i),sub_dominio(:));
-        rhs_2_theta(1:3,i)=B55*g(c,x_dados(i),sub_dominio(:));
-        rhs_3_u(1:3,i)=(C11+E)*dgdx(c,x_dados(i),sub_dominio(:));
+        rhs_2_w(1:3,i)=B55*dgdx(c,x_dados(i),sub_dominio(:));   
+        rhs_2_theta(1:3,i)=B55*g(c,x_dados(i),sub_dominio(:));   
+        rhs_3_u(1:3,i)=(C11+E)*dgdx(c,x_dados(i),sub_dominio(:));          
         rhs_3_w(1:end,i)=0;
-        rhs_3_theta(1:3,i)=(D11+G)*dgdx(c,x_dados(i),sub_dominio(:));
+        rhs_3_theta(1:3,i)=(D11+G)*dgdx(c,x_dados(i),sub_dominio(:));  
         
         arhs_1_u(1:end,i)=0;
         arhs_1_w(1:end,i)=0;
@@ -364,8 +364,8 @@ elseif  i==numel(x_dados)
         rhs_1_theta(3+1:end,i)=(C11+E)*dpol(1:p,i);
         rhs_2_w(3+1:end,i)=B55*dpol(1:p,i);
         rhs_2_theta(3+1:end,i)=B55*pol(1:p,i);
-        rhs_3_u(3+1:end,i)=(C11+E)*dpol(1:p,i);
-        rhs_3_theta(3+1:end,i)=(D11+G)*dpol(1:p,i);
+        rhs_3_u(3+1:end,i)=(C11+E)*dpol(1:p,i);      
+        rhs_3_theta(3+1:end,i)=(D11+G)*dpol(1:p,i);    
         rhs_1_phis(3+1:end,i)=F1*pol(1:p,i);
         rhs_1_phia(3+1:end,i)=F2*pol(1:p,i);
         rhs_3_phis(3+1:end,i)=H1*pol(1:p,i);
@@ -616,7 +616,6 @@ L_total(end,2*n-2:2*n)=pesos_3_w(n,3:-1:1);
 L_total(2*n+1,2*n+1:2*n+3)=pesos_3_theta(1,1:3);
 L_total(end,end-2:end)=pesos_3_theta(n,3:-1:1);
 
-
 A_total(1,1:3)=apesos_1_u(1,1:3);
 A_total(n,n-2:n)=apesos_1_u(n,3:-1:1);
 A_total(1,n+1:n+3)=apesos_1_w(1,1:3);
@@ -640,7 +639,7 @@ A_total(end,end-2:end)=apesos_3_theta(n,3:-1:1);
 L_total(1:n,1:n)=L_total(1:n,1:n)+K_uphis*(K_phiphis^-1)*K_uphis;   
 L_total(1:n,2*n+1:3*n)=L_total(1:n,2*n+1:3*n)+K_uphis*(K_phiphis^-1)*K_tphis;   
 L_total(2*n+1:3*n,1:n)=L_total(2*n+1:3*n,1:n)+K_tphis*(K_phiphis^-1)*K_uphis;   
-L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)+K_tphis*(K_phiphis^-1)*K_tphis; 
+L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)+K_tphis*(K_phiphis^-1)*K_tphis;
 %% CLOSED CIRCUIT 0V
 
 %% EIGENVALUE PROBLEM
@@ -669,6 +668,8 @@ subplot(1,3,1);plot(x_dados, lambda_mode_w(:,p));hold on;title(['w(' num2str(m) 
 subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(sqrt(lambda(p))/(2*pi),'%6.4f')])
 
 %% NEWMARK
+% Gv=0.01;
+% Gv=0.001;
 % Gv=0.0001;
 Gv=0.00000001;
 
@@ -686,14 +687,17 @@ C_total=-Gv*C_total;
 
 %cond. iniciais 
 vetor_carga=zeros(3*n,1);
-vetor_carga(n+1:2*n-1)=carga;
+vetor_carga(n+2:2*n-1)=carga;
 solucao_estatica=L_total\vetor_carga; 
-x_0=solucao_estatica; v_0=zeros(3*n,1);
-vetor_f=zeros(3*n,1);   %caso se queira impôr força inicial ao inves de deslocamento inicial
+% x_0=solucao_estatica; 
+x_0=zeros(3*n,1); %caso se queira impôr força inicial ao inves de deslocamento 
+v_0=zeros(3*n,1);
+vetor_f=zeros(3*n,1); 
+vetor_f(n+2:2*n-1)=1000;  %vetor_f   %caso se queira impôr força inicial ao inves de deslocamento inicial
 a_0=pinv(A_total)*(vetor_f-C_total*v_0-L_total*x_0);
 delta=1/2; alpha=1/4;
 % delta_t=1/(freq*200);   %delta t
-delta_t=1/10000;
+delta_t=1/100000;
 a0=1/(alpha*delta_t^2); a1=delta/(alpha*delta_t); a2=1/(alpha*delta_t); a3=1/(2*alpha)-1;
 a4=delta/alpha-1; a5=(delta_t/2)*(delta/alpha-2); a6=delta_t*(1-delta); a7=delta*delta_t;
 
