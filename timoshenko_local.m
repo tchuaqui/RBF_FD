@@ -2,9 +2,9 @@ clear all
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
-n=50;       % nº de nos
+n=100;       % nº de nos
 p=3;    %nº de polinomios
-c=5;     %shape parameter
+c=1;     %shape parameter
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
 x_central=find(x_dados==0.5);
@@ -661,7 +661,7 @@ m=1; E=6e10; I=I2(1)+I2(2); A=h; G=2.3e10;
 sol_exacta=(m*pi/L)^2*sqrt((E*I)/(rho*A))*sqrt(1-(((m*pi/L)^2*E*I)/(k*G*A+(m*pi/L)^2*E*I)));
 sol_exacta_norm=sol_exacta*L^2*sqrt(rho*A/(E*I));
 
-p=1;
+p=3;
 lambda_mode_w(1:n,p)=lambda_vec(n+1:2*n,p);
 lambda_mode_phi_x(1:n,p)=lambda_vec(2*n+1:end,p);
 lambda_mode=[lambda_mode_w;lambda_mode_phi_x];

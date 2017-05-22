@@ -1,9 +1,10 @@
 clear all
-nmax=150;
+nmax=100;
 p=3;   %nº de polinomios
 c=1;  %shape parameter c=0.5 for p=0, (c=1 for p=1 mau), (c=4 p=2 mt mau), c=1:20 for p=3
 y=zeros(1,nmax-9); y_exacta=zeros(1,nmax-9);
 for i=10:nmax
+    c=2/sqrt(i);
   [freq,freq_exacta]=conv(i,p,c); 
   y(i-9)=freq;
   y_exacta(i-9)=freq_exacta;

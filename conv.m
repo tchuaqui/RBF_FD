@@ -656,13 +656,13 @@ m=1; E=6e10; I=I2(1)+I2(2); A=h; G=2.3e10;
 sol_exacta=(m*pi/L)^2*sqrt((E*I)/(rho*A))*sqrt(1-(((m*pi/L)^2*E*I)/(k*G*A+(m*pi/L)^2*E*I)));
 sol_exacta_norm=sol_exacta*L^2*sqrt(rho*A/(E*I));
 
-p=2;
-lambda_mode_w(1:n,p)=lambda_vec(n+1:2*n,p);
-lambda_mode_phi_x(1:n,p)=lambda_vec(2*n+1:end,p);
+pp=3;
+lambda_mode_w(1:n,pp)=lambda_vec(n+1:2*n,pp);
+lambda_mode_phi_x(1:n,pp)=lambda_vec(2*n+1:end,pp);
 lambda_mode=[lambda_mode_w;lambda_mode_phi_x];
 
 
 freq_exacta=sol_exacta/(2*pi);
-freq=sqrt(lambda(p))/(2*pi);
+freq=sqrt(lambda(pp))/(2*pi);
 end
 
