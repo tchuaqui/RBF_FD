@@ -414,8 +414,9 @@ else
         rhs_3_theta(1:3,i)=(D11+G)*d2gdx2(c,x_dados(i),sub_dominio(:))-B55*g(c,x_dados(i),sub_dominio(:));
         
         arhs_1_u(1:3,i)=-J0*g(c,x_dados(i),sub_dominio(:));
-        arhs_1_w(1:end,i)=0;
         arhs_1_theta(1:3,i)=-J1*g(c,x_dados(i),sub_dominio(:));
+        arhs_1_theta(1:end,i)=0;
+
         arhs_2_u(1:end,i)=0;
         arhs_2_w(1:3,i)=-J0*g(c,x_dados(i),sub_dominio(:));
         arhs_2_theta(1:end,i)=0;
@@ -444,6 +445,7 @@ else
         rhs_3_phia(3+1:end,i)=H2*dpol(1:p,i);
         rhs_phiphis(3+1:end,i)=I_1*pol(1:p,i);
         rhs_phiphia(3+1:end,i)=I_2*pol(1:p,i);
+        
         arhs_1_u(3+1:end,i)=-J0*pol(1:p,i);
         arhs_1_theta(3+1:end,i)=-J1*pol(1:p,i);
         arhs_2_w(3+1:end,i)=-J0*pol(1:p,i);
@@ -631,12 +633,11 @@ A_total(end,2*n-2:2*n)=apesos_3_w(n,3:-1:1);
 A_total(2*n+1,2*n+1:2*n+3)=apesos_3_theta(1,1:3);
 A_total(end,end-2:end)=apesos_3_theta(n,3:-1:1);
 
-%% SMART BEAM
-L_total(1:n,1:n)=L_total(1:n,1:n)+K_uphis*(K_phiphis^-1)*K_uphis;   
-L_total(1:n,2*n+1:3*n)=L_total(1:n,2*n+1:3*n)+K_uphis*(K_phiphis^-1)*K_tphis;   
-L_total(2*n+1:3*n,1:n)=L_total(2*n+1:3*n,1:n)+K_tphis*(K_phiphis^-1)*K_uphis;   
-L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)+K_tphis*(K_phiphis^-1)*K_tphis; 
-%% CLOSED CIRCUIT 0V
+%% OPEN CIRCUIT
+L_total(1:n,1:n)=L_total(1:n,1:n)+2*K_uphis*(K_phiphis^-1)*K_uphis;   
+L_total(1:n,2*n+1:3*n)=L_total(1:n,2*n+1:3*n)+2*K_uphis*(K_phiphis^-1)*K_tphis;   
+L_total(2*n+1:3*n,1:n)=L_total(2*n+1:3*n,1:n)+2*K_tphis*(K_phiphis^-1)*K_uphis;   
+L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)+2*K_tphis*(K_phiphis^-1)*K_tphis;
 
 %% EIGENVALUE PROBLEM
 [lambda_vec,lambda]=eig(L_total,A_total);
@@ -655,7 +656,7 @@ m=1; E=6e10; I=I2(1)+I2(2); A=h; G=2.3e10;
 sol_exacta=(m*pi/L)^2*sqrt((E*I)/(rho*A))*sqrt(1-(((m*pi/L)^2*E*I)/(k*G*A+(m*pi/L)^2*E*I)));
 sol_exacta_norm=sol_exacta*L^2*sqrt(rho*A/(E*I));
 
-p=1;
+p=2;
 lambda_mode_w(1:n,p)=lambda_vec(n+1:2*n,p);
 lambda_mode_phi_x(1:n,p)=lambda_vec(2*n+1:end,p);
 lambda_mode=[lambda_mode_w;lambda_mode_phi_x];

@@ -2,13 +2,13 @@ clear all
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
-n=100;       % nº de nos
+n=50;       % nº de nos
 p=3;    %nº de polinomios
-c=1;     %shape parameter
+c=5;     %shape parameter
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
 x_central=find(x_dados==0.5);
-carga=2000;
+carga=1000;
 [ pol,dpol,d2pol ] = polynomials( x_dados,n,p);
 
 %%
@@ -90,7 +90,7 @@ rhs_3_u=zeros(3+p,numel(x_dados));
 rhs_3_w=zeros(3+p,numel(x_dados));     
 rhs_3_theta=zeros(3+p,numel(x_dados));  
 rhs_3_phis=zeros(3+p,numel(x_dados));       
-rhs_3_phia=zeros(3+p,numel(x_dados));      
+rhs_3_phia=zeros(3+p,numel(x_dados));  
 
 rhs_phiphis=zeros(3+p,numel(x_dados));  
 rhs_phiphia=zeros(3+p,numel(x_dados));   
@@ -635,12 +635,15 @@ A_total(end,2*n-2:2*n)=apesos_3_w(n,3:-1:1);
 A_total(2*n+1,2*n+1:2*n+3)=apesos_3_theta(1,1:3);
 A_total(end,end-2:end)=apesos_3_theta(n,3:-1:1);
 
-%% SMART BEAM
-L_total(1:n,1:n)=L_total(1:n,1:n)+K_uphis*(K_phiphis^-1)*K_uphis;   
-L_total(1:n,2*n+1:3*n)=L_total(1:n,2*n+1:3*n)+K_uphis*(K_phiphis^-1)*K_tphis;   
-L_total(2*n+1:3*n,1:n)=L_total(2*n+1:3*n,1:n)+K_tphis*(K_phiphis^-1)*K_uphis;   
-L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)+K_tphis*(K_phiphis^-1)*K_tphis;
-%% CLOSED CIRCUIT 0V
+%% OPEN CIRCUIT
+L_total(1:n,1:n)=L_total(1:n,1:n)+2*K_uphis*(K_phiphis^-1)*K_uphis;   
+L_total(1:n,2*n+1:3*n)=L_total(1:n,2*n+1:3*n)+2*K_uphis*(K_phiphis^-1)*K_tphis;   
+L_total(2*n+1:3*n,1:n)=L_total(2*n+1:3*n,1:n)+2*K_tphis*(K_phiphis^-1)*K_uphis;   
+L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)+2*K_tphis*(K_phiphis^-1)*K_tphis;
+% L_total(1:n,1:n)=L_total(1:n,1:n)+K_uphis*(K_phiphis^-1)*K_uphis+K_uphia*(K_phiphia^-1)*K_uphia;   
+% L_total(1:n,2*n+1:3*n)=L_total(1:n,2*n+1:3*n)+K_uphis*(K_phiphis^-1)*K_tphis+K_uphia*(K_phiphia^-1)*K_tphia;   
+% L_total(2*n+1:3*n,1:n)=L_total(2*n+1:3*n,1:n)+K_tphis*(K_phiphis^-1)*K_uphis+K_tphia*(K_phiphia^-1)*K_uphia;   
+% L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)+K_tphis*(K_phiphis^-1)*K_tphis+K_tphia*(K_phiphia^-1)*K_tphia;
 
 %% EIGENVALUE PROBLEM
 [lambda_vec,lambda]=eig(L_total,A_total);
@@ -666,91 +669,3 @@ lambda_mode=[lambda_mode_w;lambda_mode_phi_x];
 figure(1)
 subplot(1,3,1);plot(x_dados, lambda_mode_w(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(sqrt(lambda(p))/(2*pi),'%6.4f')])
 subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(sqrt(lambda(p))/(2*pi),'%6.4f')])
-
-%% NEWMARK
-% Gv=0.01;
-% Gv=0.001;
-% Gv=0.0001;
-Gv=0.00000001;
-
-C_uu=K_uphia*(K_phiphis^-1)*K_uphis;
-C_ut=K_uphia*(K_phiphis^-1)*K_tphis;
-C_tu=K_tphia*(K_phiphis^-1)*K_uphis;
-C_tt=K_tphia*(K_phiphis^-1)*K_tphis;
-C_total=zeros(3*n,3*n);
-C_total(1:n,1:n)=-C_uu;   %estava positivo, com negativo funciona!
-C_total(1:n,2*n+1:3*n)=C_ut;
-C_total(2*n+1:3*n,1:n)=C_tu;
-C_total(2*n+1:3*n,2*n+1:3*n)=C_tt;
-C_total(1,1:end)=0; C_total(n,1:end)=0; C_total(2*n+1,1:end)=0; C_total(3*n,1:end)=0;
-C_total=-Gv*C_total;
-
-%cond. iniciais 
-vetor_carga=zeros(3*n,1);
-vetor_carga(n+2:2*n-1)=carga;
-solucao_estatica=L_total\vetor_carga; 
-% x_0=solucao_estatica; 
-x_0=zeros(3*n,1); %caso se queira impôr força inicial ao inves de deslocamento 
-v_0=zeros(3*n,1);
-vetor_f=zeros(3*n,1); 
-vetor_f(n+2:2*n-1)=1000;  %vetor_f   %caso se queira impôr força inicial ao inves de deslocamento inicial
-a_0=pinv(A_total)*(vetor_f-C_total*v_0-L_total*x_0);
-delta=1/2; alpha=1/4;
-% delta_t=1/(freq*200);   %delta t
-delta_t=1/100000;
-a0=1/(alpha*delta_t^2); a1=delta/(alpha*delta_t); a2=1/(alpha*delta_t); a3=1/(2*alpha)-1;
-a4=delta/alpha-1; a5=(delta_t/2)*(delta/alpha-2); a6=delta_t*(1-delta); a7=delta*delta_t;
-
-%rigidez efetiva
-K_efe=L_total+a0*A_total+a1*C_total;
-
-% t_final=10/freq;   % t final
-t_final=0.02;
-n_t=int64(t_final/delta_t+1);
-t=zeros(n_t,1);
-x_t=zeros(3*n,n_t); x_t(:,1)=x_0;
-v_t=zeros(3*n,n_t); v_t(:,1)=v_0;
-a_t=zeros(3*n,n_t); a_t(:,1)=a_0;
-for i=2:n_t
-  t(i)=t(i-1)+delta_t;
-  F_efe=A_total*(a0*x_t(:,i-1)+a2*v_t(:,i-1)+a3*a_t(:,i-1))+C_total*(a1*x_t(:,i-1)+a4*v_t(:,i-1)+a5*a_t(:,i-1));
-  x_t(:,i)=K_efe\F_efe;
-  a_t(:,i)=a0*(x_t(:,i)-x_t(:,i-1))-a2*v_t(:,i-1)-a3*a_t(:,i-1);
-  v_t(:,i)=v_t(:,i-1)+a6*a_t(:,i-1)+a7*a_t(:,i);
-end
-switch cfstr
-    case {'cc'}
-      x_max=x_t(n+ceil(n/2),:);  
-    case {'ss'}
-      x_max=x_t(n+ceil(n/2),:);  
-    case{'cl'}  
-      x_max=x_t(2*n,:);
-end
-figure(2)
-plot(t,x_max);      
-hold on
-
-%%
-X=fft(x_max);
-X_mag=abs(X(1:ceil(n_t/2)));
-[pk_vals, pk_locs]=findpeaks(X_mag);
-%remove peaks below threshold
-% inds=find(X_mag(pk_locs)<1);
-% pk_locs(inds)=[];
-
-%determine frequencies
-pk_freqs=zeros(length(pk_locs),1);
-for i=1:length(pk_locs)
-pk_freqs(i)=(pk_locs(i)-1)/t_final;
-end
-
-figure(3)
-plot(X_mag);
-hold on
-
-
-%%
-
-fID = fopen('3GBL_x0.txt','w');
-fprintf(fID,'\t %25.15f\r\n', x_0);
-fclose(fID);
