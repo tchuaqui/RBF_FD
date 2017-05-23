@@ -1,9 +1,9 @@
-function [ freq ] = conv( n,p,c,mode) %cf,ncamadas, distribuicao quad ou lin do potencial
+function [ freq ] = timo_function(esp_al,esp_piezo,n,p,c)
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
-ncamadas=2;    %n camadas
-esp_al=8e-3; esp_piezo=1e-3;
+ncamadas=3;
+mode=1;
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
 [xi,xj]=meshgrid(x_dados);
 x_central=find(x_dados==0.5);
@@ -33,7 +33,6 @@ ezz=propel(3);
 Q11=[propmec(2) propal(2) propmec(2)];
 Q55=[propmec(3) propal(2)/(2*(1+propal(3))) propmec(3)];
 end
-%%
 h=0;
 for i=1:ncamadas
 h=h+esp(i);    
