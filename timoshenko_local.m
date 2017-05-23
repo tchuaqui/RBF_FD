@@ -662,10 +662,11 @@ p=1;
 lambda_mode_w(1:n,p)=lambda_vec(n+1:2*n,p);
 lambda_mode_phi_x(1:n,p)=lambda_vec(2*n+1:end,p);
 lambda_mode=[lambda_mode_w;lambda_mode_phi_x];
+freq=sqrt(lambda)/(2*pi);
 
 figure(1)
-subplot(1,3,1);plot(x_dados, lambda_mode_w(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(sqrt(lambda(p))/(2*pi),'%6.4f')])
-subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(sqrt(lambda(p))/(2*pi),'%6.4f')])
+subplot(1,3,1);plot(x_dados, lambda_mode_w(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(freq(p),'%6.4f')])
+subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(freq(p),'%6.4f')])
 
 %% NEWMARK
 % Gv=0.01;
@@ -733,6 +734,26 @@ hold on
 %%
 X=fft(x_max);
 X_mag=abs(X(1:ceil(n_t/2)));
+X_mode1=fft(max(abs(x_max))*cos(freq(1)*2*pi*t));
+X_mag_mode1=abs(X_mode1(1:ceil(n_t/2)));
+X_mode2=fft(max(abs(x_max))*cos(freq(2)*2*pi*t));
+X_mag_mode2=abs(X_mode2(1:ceil(n_t/2)));
+X_mode3=fft(max(abs(x_max))*cos(freq(3)*2*pi*t));
+X_mag_mode3=abs(X_mode3(1:ceil(n_t/2)));
+X_mode4=fft(max(abs(x_max))*cos(freq(4)*2*pi*t));
+X_mag_mode4=abs(X_mode4(1:ceil(n_t/2)));
+X_mode5=fft(max(abs(x_max))*cos(freq(5)*2*pi*t));
+X_mag_mode5=abs(X_mode5(1:ceil(n_t/2)));
+X_mode6=fft(max(abs(x_max))*cos(freq(6)*2*pi*t));
+X_mag_mode6=abs(X_mode6(1:ceil(n_t/2)));
+X_mode7=fft(max(abs(x_max))*cos(freq(7)*2*pi*t));
+X_mag_mode7=abs(X_mode7(1:ceil(n_t/2)));
+X_mode8=fft(max(abs(x_max))*cos(freq(8)*2*pi*t));
+X_mag_mode8=abs(X_mode8(1:ceil(n_t/2)));
+X_mode9=fft(max(abs(x_max))*cos(freq(9)*2*pi*t));
+X_mag_mode9=abs(X_mode9(1:ceil(n_t/2)));
+X_mode10=fft(max(abs(x_max))*cos(freq(10)*2*pi*t));
+X_mag_mode10=abs(X_mode10(1:ceil(n_t/2)));
 [pk_vals, pk_locs]=findpeaks(X_mag);
 %remove peaks below threshold
 % inds=find(X_mag(pk_locs)<1);
@@ -747,8 +768,25 @@ end
 figure(3)
 plot(X_mag);
 hold on
-
-
+plot(X_mag_mode1,'k');
+hold on
+plot(X_mag_mode2,'r');
+hold on
+plot(X_mag_mode3,'g');
+hold on
+plot(X_mag_mode4,'y');
+hold on
+plot(X_mag_mode5,'m');
+hold on
+plot(X_mag_mode6,'c');
+hold on
+plot(X_mag_mode7,'k--');
+hold on
+plot(X_mag_mode8,'r--');
+hold on
+plot(X_mag_mode9,'g--');
+hold on
+plot(X_mag_mode10,'y--');
 %%
 
 fID = fopen('3GBL_x0.txt','w');
