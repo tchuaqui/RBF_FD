@@ -2,6 +2,7 @@ clear all
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
+control='CAVF'; %ESCOLHER O TIPO DE CONTROLADOR (CGVF/CAVF)
 n=100;       % nº de nos
 p=3;    %nº de polinomios
 c=1;     %shape parameter
@@ -669,10 +670,12 @@ subplot(1,3,1);plot(x_dados, lambda_mode_w(:,p));hold on;title(['w(' num2str(m) 
 subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(freq(p),'%6.4f')])
 
 %% NEWMARK
+switch control
+    case {'CGVF'}
 % Gv=0.01;
-% Gv=0.001;
+Gv=0.001;
 % Gv=0.0001;
-Gv=0.00000001;
+% Gv=0.00000001;
 
 C_uu=K_uphia*(K_phiphis^-1)*K_uphis;
 C_ut=K_uphia*(K_phiphis^-1)*K_tphis;
@@ -690,11 +693,11 @@ C_total=-Gv*C_total;
 vetor_carga=zeros(3*n,1);
 vetor_carga(n+2:2*n-1)=carga;
 solucao_estatica=L_total\vetor_carga; 
-% x_0=solucao_estatica; 
-x_0=zeros(3*n,1); %caso se queira impôr força inicial ao inves de deslocamento 
+x_0=solucao_estatica; 
+% x_0=zeros(3*n,1); %caso se queira impôr força inicial ao inves de deslocamento 
 v_0=zeros(3*n,1);
 vetor_f=zeros(3*n,1); 
-vetor_f(n+2:2*n-1)=1000;  %vetor_f   %caso se queira impôr força inicial ao inves de deslocamento inicial
+% vetor_f(n+2:2*n-1)=1000;  %vetor_f   %caso se queira impôr força inicial ao inves de deslocamento inicial
 a_0=pinv(A_total)*(vetor_f-C_total*v_0-L_total*x_0);
 delta=1/2; alpha=1/4;
 % delta_t=1/(freq*200);   %delta t
@@ -712,9 +715,10 @@ t=zeros(n_t,1);
 x_t=zeros(3*n,n_t); x_t(:,1)=x_0;
 v_t=zeros(3*n,n_t); v_t(:,1)=v_0;
 a_t=zeros(3*n,n_t); a_t(:,1)=a_0;
+vetor_F=zeros(3*n,n_t); %MUDAR CASO SE QUEIRA APLICAR FORÇAS AO LONGO DE UM PERÍODO DE TEMPO
 for i=2:n_t
   t(i)=t(i-1)+delta_t;
-  F_efe=A_total*(a0*x_t(:,i-1)+a2*v_t(:,i-1)+a3*a_t(:,i-1))+C_total*(a1*x_t(:,i-1)+a4*v_t(:,i-1)+a5*a_t(:,i-1));
+  F_efe=vetor_F(:,i)+A_total*(a0*x_t(:,i-1)+a2*v_t(:,i-1)+a3*a_t(:,i-1))+C_total*(a1*x_t(:,i-1)+a4*v_t(:,i-1)+a5*a_t(:,i-1));
   x_t(:,i)=K_efe\F_efe;
   a_t(:,i)=a0*(x_t(:,i)-x_t(:,i-1))-a2*v_t(:,i-1)-a3*a_t(:,i-1);
   v_t(:,i)=v_t(:,i-1)+a6*a_t(:,i-1)+a7*a_t(:,i);
@@ -731,7 +735,87 @@ figure(2)
 plot(t,x_max);      
 hold on
 
-%%
+% ACTUATOR VOLTAGE VS TIME (TIP OF THE BEAM, CGVF)
+pot_act=zeros(n,n_t);
+pot_act_tip=zeros(1,n_t);
+for i=1:n_t
+pot_act(:,i)=Gv*((K_phiphis^-1)*K_uphis*v_t(1:n,i)+(K_phiphis^-1)*K_tphis*v_t(2*n+1:3*n,i));
+pot_act_tip(i)=pot_act(end,i);
+end
+
+figure(3)
+plot(t,pot_act_tip);
+hold on
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    case {'CAVF'}
+% Gv=4.6960e-06;
+Gv=10;
+% Gv=0.0001;
+% Gv=0.00000001;    
+
+%cond. iniciais 
+vetor_carga=zeros(3*n,1);
+vetor_carga(n+2:2*n-1)=carga;
+solucao_estatica=L_total\vetor_carga; 
+x_0=solucao_estatica; 
+% x_0=zeros(3*n,1); %caso se queira impôr força inicial ao inves de deslocamento 
+v_0=zeros(3*n,1);
+vetor_f=zeros(3*n,1); 
+% vetor_f(n+2:2*n-1)=1000;  %vetor_f   %caso se queira impôr força inicial ao inves de deslocamento inicial
+a_0=pinv(A_total)*(vetor_f-L_total*x_0);
+delta=1/2; alpha=1/4;
+% delta_t=1/(freq*200);   %delta t
+delta_t=1/100000;
+a0=1/(alpha*delta_t^2); a1=delta/(alpha*delta_t); a2=1/(alpha*delta_t); a3=1/(2*alpha)-1;
+a4=delta/alpha-1; a5=(delta_t/2)*(delta/alpha-2); a6=delta_t*(1-delta); a7=delta*delta_t;
+
+%rigidez efetiva
+K_efe=L_total+a0*A_total;
+
+% t_final=10/freq;   % t final
+t_final=0.02;
+n_t=int64(t_final/delta_t+1);
+t=zeros(n_t,1);
+x_t=zeros(3*n,n_t); x_t(:,1)=x_0;
+v_t=zeros(3*n,n_t); v_t(:,1)=v_0;
+a_t=zeros(3*n,n_t); a_t(:,1)=a_0; 
+vetor_F=zeros(3*n,n_t); %MUDAR CASO SE QUEIRA APLICAR FORÇAS AO LONGO DE UM PERÍODO DE TEMPO
+dphis_dt=zeros(n,n_t); phi_a=zeros(n,n_t); vetor_CONTROL=zeros(3*n,n_t); 
+dphis_dt(:,1)=-(K_phiphis^-1)*(K_uphis*v_t(1:n,1)+K_tphis*v_t(2*n+1:3*n,1));
+phi_a(:,1)=-Gv*sign(dphis_dt(:,1));
+vetor_CONTROL(:,1)=[K_uphia; zeros(n,n); K_tphia]*phi_a(:,1);
+for i=2:n_t
+  t(i)=t(i-1)+delta_t;
+  F_efe=vetor_F(:,i)+vetor_CONTROL(:,i-1)+A_total*(a0*x_t(:,i-1)+a2*v_t(:,i-1)+a3*a_t(:,i-1));
+  x_t(:,i)=K_efe\F_efe;
+  a_t(:,i)=a0*(x_t(:,i)-x_t(:,i-1))-a2*v_t(:,i-1)-a3*a_t(:,i-1);
+  v_t(:,i)=v_t(:,i-1)+a6*a_t(:,i-1)+a7*a_t(:,i);
+  dphis_dt(:,i)=-(K_phiphis^-1)*(K_uphis*v_t(1:n,i)+K_tphis*v_t(2*n+1:3*n,i));
+  phi_a(:,i)=-Gv*sign(-dphis_dt(:,i));
+  vetor_CONTROL(:,i)=[K_uphia; zeros(n,n); K_tphia]*phi_a(:,i);
+end
+switch cfstr
+    case {'cc'}
+      x_max=x_t(n+ceil(n/2),:);  
+    case {'ss'}
+      x_max=x_t(n+ceil(n/2),:);  
+    case{'cl'}  
+      x_max=x_t(2*n,:);
+end
+figure(2)
+plot(t,x_max);      
+hold on
+
+figure(3)
+plot(t,phi_a);
+hold on
+end
+
+
+
+%% FRF
 X=fft(x_max);
 X_mag=abs(X(1:ceil(n_t/2)));
 X_mode1=fft(max(abs(x_max))*cos(freq(1)*2*pi*t));
@@ -765,7 +849,7 @@ for i=1:length(pk_locs)
 pk_freqs(i)=(pk_locs(i)-1)/t_final;
 end
 
-figure(3)
+figure(4)
 plot(X_mag);
 hold on
 plot(X_mag_mode1,'k');
