@@ -1,8 +1,8 @@
-clear all
+clear all   %CODIGO PARA SMART BEAM BIMORPH (CAVF E CGVF)
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
-control='CAVF'; %ESCOLHER O TIPO DE CONTROLADOR (CGVF/CAVF)
+control='CAVF'; %ESCOLHER O TIPO DE CONTROLADOR (CGVF/CAVF)!!!
 n=100;       % nº de nos
 p=3;    %nº de polinomios
 c=1;     %shape parameter
@@ -73,8 +73,8 @@ F1=e31*I0(1)/esp(1);
 F2=e31*I0(2)/esp(2);
 H1=e31*I1(1)/esp(1);
 H2=e31*I1(2)/esp(2);
-I_1=ezz*I0(1)/(esp(1)^2);
-I_2=ezz*I0(2)/(esp(2)^2);
+I_1=-ezz*I0(1)/(esp(1)^2);
+I_2=-ezz*I0(2)/(esp(2)^2);
 
 %% INICIACAO DAS MATRIZES (PARA DETERMINACAO DOS PESOS) RIGIDEZ E INERCIA
 rhs_1_u=zeros(3+p,numel(x_dados)); 
@@ -637,17 +637,19 @@ A_total(2*n+1,2*n+1:2*n+3)=apesos_3_theta(1,1:3);
 A_total(end,end-2:end)=apesos_3_theta(n,3:-1:1);
 
 %% SMART BEAM
-L_total(1:n,1:n)=L_total(1:n,1:n)+K_uphis*(K_phiphis^-1)*K_uphis;   
-L_total(1:n,2*n+1:3*n)=L_total(1:n,2*n+1:3*n)+K_uphis*(K_phiphis^-1)*K_tphis;   
-L_total(2*n+1:3*n,1:n)=L_total(2*n+1:3*n,1:n)+K_tphis*(K_phiphis^-1)*K_uphis;   
-L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)+K_tphis*(K_phiphis^-1)*K_tphis;
+L_total(1:n,1:n)=L_total(1:n,1:n)-K_uphis*(K_phiphis^-1)*K_uphis;   
+L_total(1:n,2*n+1:3*n)=L_total(1:n,2*n+1:3*n)-K_uphis*(K_phiphis^-1)*K_tphis;   
+L_total(2*n+1:3*n,1:n)=L_total(2*n+1:3*n,1:n)-K_tphis*(K_phiphis^-1)*K_uphis;   
+L_total(2*n+1:3*n,2*n+1:3*n)=L_total(2*n+1:3*n,2*n+1:3*n)-K_tphis*(K_phiphis^-1)*K_tphis;
 %% CLOSED CIRCUIT 0V
 
 %% EIGENVALUE PROBLEM
+% [lambda_vec,lambda]=eigs(L_total,A_total,4,'sm');
 [lambda_vec,lambda]=eig(L_total,A_total);
+
 [V,D]=eig(L_total,A_total,'qz');SS5=L_total*V-A_total*V*D;
 
-T=L_total*lambda_vec-lambda*A_total*lambda_vec;
+%T=L_total*lambda_vec-lambda*A_total*lambda_vec;
 
 lambda=diag(lambda,0); 
 [lambda,indice]=sort(lambda);
@@ -665,14 +667,14 @@ lambda_mode_phi_x(1:n,p)=lambda_vec(2*n+1:end,p);
 lambda_mode=[lambda_mode_w;lambda_mode_phi_x];
 freq=sqrt(lambda)/(2*pi);
 
-figure(1)
-subplot(1,3,1);plot(x_dados, lambda_mode_w(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(freq(p),'%6.4f')])
-subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(freq(p),'%6.4f')])
+figure(1);
+subplot(1,3,1);plot(x_dados, lambda_mode_w(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(freq(p),'%6.4f')]);
+subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str(m) ')_{exact} = ' num2str(sol_exacta/(2*pi),'%6.4f')]);legend(['w(' num2str(m) ')=' num2str(freq(p),'%6.4f')]);
 
 %% NEWMARK
 switch control
     case {'CGVF'}
-% Gv=0.01;
+% Gv=10;
 Gv=0.001;
 % Gv=0.0001;
 % Gv=0.00000001;
@@ -682,12 +684,12 @@ C_ut=K_uphia*(K_phiphis^-1)*K_tphis;
 C_tu=K_tphia*(K_phiphis^-1)*K_uphis;
 C_tt=K_tphia*(K_phiphis^-1)*K_tphis;
 C_total=zeros(3*n,3*n);
-C_total(1:n,1:n)=-C_uu;   %estava positivo, com negativo funciona!
+C_total(1:n,1:n)=-C_uu;   
 C_total(1:n,2*n+1:3*n)=C_ut;
 C_total(2*n+1:3*n,1:n)=C_tu;
 C_total(2*n+1:3*n,2*n+1:3*n)=C_tt;
 C_total(1,1:end)=0; C_total(n,1:end)=0; C_total(2*n+1,1:end)=0; C_total(3*n,1:end)=0;
-C_total=-Gv*C_total;
+C_total=Gv*C_total;
 
 %cond. iniciais 
 vetor_carga=zeros(3*n,1);
@@ -744,16 +746,16 @@ pot_act_tip(i)=pot_act(end,i);
 end
 
 figure(3)
-plot(t,pot_act_tip);
+plot(t,pot_act_tip);  
 hold on
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     case {'CAVF'}
 % Gv=4.6960e-06;
-Gv=10;
-% Gv=0.0001;
-% Gv=0.00000001;    
+Gv=5;
+% Gv=0.01;
+% Gv=0.0000001;    
 
 %cond. iniciais 
 vetor_carga=zeros(3*n,1);
@@ -784,18 +786,50 @@ a_t=zeros(3*n,n_t); a_t(:,1)=a_0;
 vetor_F=zeros(3*n,n_t); %MUDAR CASO SE QUEIRA APLICAR FORÇAS AO LONGO DE UM PERÍODO DE TEMPO
 dphis_dt=zeros(n,n_t); phi_a=zeros(n,n_t); vetor_CONTROL=zeros(3*n,n_t); 
 dphis_dt(:,1)=-(K_phiphis^-1)*(K_uphis*v_t(1:n,1)+K_tphis*v_t(2*n+1:3*n,1));
-phi_a(:,1)=-Gv*sign(dphis_dt(:,1));
-vetor_CONTROL(:,1)=[K_uphia; zeros(n,n); K_tphia]*phi_a(:,1);
+% phi_a(:,1)=-Gv*sign(dphis_dt(:,1));   %dphis_dt(:,i) %v_t(2*n,i)
+% phi_a(:,1)=-Gv*sign(v_t(n+1:2*n,1));
+phi_a(:,1)=-Gv*sign(v_t(2*n,1)); 
+vetor_CONTROL(:,1)=[K_uphia*phi_a(:,1); zeros(n,1); K_tphia*phi_a(:,1)];
 for i=2:n_t
   t(i)=t(i-1)+delta_t;
-  F_efe=vetor_F(:,i)+vetor_CONTROL(:,i-1)+A_total*(a0*x_t(:,i-1)+a2*v_t(:,i-1)+a3*a_t(:,i-1));
+  F_efe=vetor_F(:,i)+vetor_CONTROL(:,i-1)+A_total*(a0*x_t(:,i-1)+a2*v_t(:,i-1)+a3*a_t(:,i-1)); 
   x_t(:,i)=K_efe\F_efe;
   a_t(:,i)=a0*(x_t(:,i)-x_t(:,i-1))-a2*v_t(:,i-1)-a3*a_t(:,i-1);
   v_t(:,i)=v_t(:,i-1)+a6*a_t(:,i-1)+a7*a_t(:,i);
-  dphis_dt(:,i)=-(K_phiphis^-1)*(K_uphis*v_t(1:n,i)+K_tphis*v_t(2*n+1:3*n,i));
-  phi_a(:,i)=-Gv*sign(-dphis_dt(:,i));
-  vetor_CONTROL(:,i)=[K_uphia; zeros(n,n); K_tphia]*phi_a(:,i);
+  dphis_dt(:,i)=(K_phiphis^-1)*(-K_uphis*v_t(1:n,i)-K_tphis*v_t(2*n+1:3*n,i));
+  
+%  aux=zeros(1,n_t);
+% if i>=51
+% aux(1:i)=sgolayfilt(dphis_dt(end,1:i),3,51); %filtro Savitzky-Golay
+% aux(1:i)=sgolayfilt(v_t(2*n,1:i),3,51);
+% else 
+% aux(1:i)=dphis_dt(end,1:i);
+% aux(1:i)=v_t(2*n,1:i);
+% end
+% phi_a(:,i)=-Gv*sign(dphis_dt(:,i));
+% phi_a(:,i)=-Gv*sign(v_t(n+1:2*n,i));
+
+phi_a(:,i)=-Gv*sign(v_t(2*n,i));
+vetor_CONTROL(:,i)=[K_uphia*phi_a(:,i); zeros(n,1); K_tphia*phi_a(:,i)];
+  
+% figure(2)
+% plot(t(1:i),x_t(2*n,1:i)/4.6721e-06,'k'); drawnow
+% hold on 
+% plot(t(1:i),v_t(2*n,1:i)/0.0149,'r'); drawnow
+% hold on
+% plot(t(1:i),aux(1:i)/0.0149,'b'); drawnow
+
+% plot(t(1:i),aux(1:i)/1.8136e+03,'b'); drawnow
+% hold on
+% plot(t(1:i),dphis_dt(end,1:i)/1.8136e+03,'r'); drawnow
+
+% plot(t(1:i),aux(1:i)/0.0149,'b'); drawnow
+% hold on
+% plot(t(1:i),v_t(2*n,1:i)/0.0149,'r'); drawnow
 end
+
+
+
 switch cfstr
     case {'cc'}
       x_max=x_t(n+ceil(n/2),:);  
@@ -809,8 +843,21 @@ plot(t,x_max);
 hold on
 
 figure(3)
-plot(t,phi_a);
+plot(t,phi_a(end,:));
+
+figure(4)
+plot(t,v_t(2*n,:));  
 hold on
+% hold on
+% plot(t,v_t(2*n,:)/max(v_t(2*n,:)));
+% hold on
+% plot(t,dphis_dt(end,:)/max(dphis_dt(end,:)));
+
+
+% figure(5)
+% plot(t,dphis_dt(end,:));
+% hold on
+% plot(t,vetor_CONTROL(5,:))
 end
 
 
@@ -849,7 +896,7 @@ for i=1:length(pk_locs)
 pk_freqs(i)=(pk_locs(i)-1)/t_final;
 end
 
-figure(4)
+figure(5)
 plot(X_mag);
 hold on
 plot(X_mag_mode1,'k');
