@@ -675,9 +675,9 @@ subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,p));hold on;title(['w(' num2str
 switch control
     case {'CGVF'}
 % Gv=10;
-Gv=0.001;
+% Gv=0.001;
 % Gv=0.0001;
-% Gv=0.00000001;
+Gv=0.00000001;
 
 C_uu=K_uphia*(K_phiphis^-1)*K_uphis;
 C_ut=K_uphia*(K_phiphis^-1)*K_tphis;
@@ -749,11 +749,19 @@ figure(3)
 plot(t,pot_act_tip);  
 hold on
 
+figure(4)
+plot(t,v_t(2*n,:));
+hold on
+
+figure(5)
+plot(t,a_t(2*n,:));
+hold on
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     case {'CAVF'}
 % Gv=4.6960e-06;
-Gv=5;
+Gv=10;
 % Gv=0.01;
 % Gv=0.0000001;    
 
@@ -848,6 +856,10 @@ plot(t,phi_a(end,:));
 figure(4)
 plot(t,v_t(2*n,:));  
 hold on
+
+figure(5)
+plot(t,a_t(2*n,:));
+hold on
 % hold on
 % plot(t,v_t(2*n,:)/max(v_t(2*n,:)));
 % hold on
@@ -896,7 +908,7 @@ for i=1:length(pk_locs)
 pk_freqs(i)=(pk_locs(i)-1)/t_final;
 end
 
-figure(5)
+figure(6)
 plot(X_mag);
 hold on
 plot(X_mag_mode1,'k');
