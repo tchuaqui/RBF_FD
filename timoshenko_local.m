@@ -2,9 +2,9 @@ clear all                          % short-circuit 0V, longitudinal inertia is n
 x_inicial=0;x_final=100e-3;
 L=x_final-x_inicial;
 cfstr='cl';
-ncamadas=3;    %n camadas
+ncamadas=2;    %n camadas
 esp_al=8e-3; esp_piezo=1e-3;
-n=100;       % nº de nos
+n=150;       % nº de nos
 p=3;    %nº de polinomios
 c=1;     %shape parameter
 x_dados=[0:L/(n-1):L];dist=x_dados(3)-x_dados(1);
@@ -455,10 +455,51 @@ eigval = lambda(1,1);eigvec = lambda_vec(:,1);
 % sol_exacta_norm=sol_exacta*L^2*sqrt(rho*A/(E*I));
 
 pp=1;
-lambda_mode_w(1:n,pp)=lambda_vec(1:n,pp);
-lambda_mode_phi_x(1:n,pp)=lambda_vec(n+1:2*n,pp);
-lambda_mode=[lambda_mode_w;lambda_mode_phi_x];
+lambda_mode_1w(1:n,pp)=lambda_vec(1:n,pp);
+lambda_mode_1phi_x(1:n,pp)=lambda_vec(n+1:2*n,pp);
+lambda_mode1=[lambda_mode_1w;lambda_mode_1phi_x];
+
+pp=2;
+lambda_mode_2w(1:n,pp)=lambda_vec(1:n,pp);
+lambda_mode_2phi_x(1:n,pp)=lambda_vec(n+1:2*n,pp);
+lambda_mode2=[lambda_mode_2w;lambda_mode_2phi_x];
+
+pp=3;
+lambda_mode_3w(1:n,pp)=lambda_vec(1:n,pp);
+lambda_mode_3phi_x(1:n,pp)=lambda_vec(n+1:2*n,pp);
+lambda_mode3=[lambda_mode_3w;lambda_mode_3phi_x];
+%figure(1)
+%subplot(1,3,1);plot(x_dados, lambda_mode_w(:,pp));hold on;legend(['w(' num2str(pp) ')=' num2str(sqrt(lambda(pp))/(2*pi),'%6.4f')])
+%subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,pp));hold on;legend(['w(' num2str(pp) ')=' num2str(sqrt(lambda(pp))/(2*pi),'%6.4f')])
+
+%ANIMATIONS
 
 figure(1)
-subplot(1,3,1);plot(x_dados, lambda_mode_w(:,pp));hold on;legend(['w(' num2str(pp) ')=' num2str(sqrt(lambda(pp))/(2*pi),'%6.4f')])
-subplot(1,3,2);plot(x_dados, lambda_mode_phi_x(:,pp));hold on;legend(['w(' num2str(pp) ')=' num2str(sqrt(lambda(pp))/(2*pi),'%6.4f')])
+filename='test.gif';
+speed=1;
+f1=463.97*speed;   f2=2776.46*speed;  f3=7093*speed;
+T=1/f1;  
+inc_t=150; t=[0:1/((inc_t-1)*f1):T];
+for i=1:inc_t  
+mode_anim1=lambda_mode_1w(1:n,1)/(max(abs(lambda_mode_1w(1:n,1))))*cos(2*pi*f1*t(i));
+mode_anim2=lambda_mode_2w(1:n,2)/(max(abs(lambda_mode_2w(1:n,2))))*cos(2*pi*f2*t(i));
+mode_anim3=lambda_mode_3w(1:n,3)/(max(abs(lambda_mode_3w(1:n,3))))*cos(2*pi*f3*t(i));
+
+plot(x_dados/L,mode_anim1,'k',x_dados/L,mode_anim2,'b',x_dados/L,mode_anim3,'r','LineWidth',2)
+axis([0 1 -1 1])
+
+set(gca,'fontsize',18)
+% legend({'1st mode','2nd mode','3rd mode'},'interpreter','LaTex')
+xlabel('$x/L$','Interpreter','LaTex');
+ylabel('Normalized displacement w','Interpreter','LaTex');
+
+drawnow
+frame=getframe(1);
+im=frame2im(frame);
+[imind,cm] = rgb2ind(im,256);
+if i == 1;
+          imwrite(imind,cm,filename,'gif', 'Loopcount',Inf);
+ else
+          imwrite(imind,cm,filename,'gif','WriteMode','append');
+end  
+end 
